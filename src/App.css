@@ -1,0 +1,62 @@
+/* src/App.css */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-light);
+  overflow: hidden;
+  position: relative; /* Needed for positioning the toggle button */
+}
+
+.main-view {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+/* Hide the toggle button on larger screens */
+.sidebar-toggle-button {
+  display: none;
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 1100; /* Ensure it's above other content but below the sidebar */
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+}
+
+.sidebar-overlay {
+  display: none; /* Hidden by default */
+}
+
+
+/* --- Mobile Styles --- */
+@media (max-width: 768px) {
+  .app-layout {
+    /* The layout remains flex, but the sidebar will be positioned absolutely */
+  }
+
+  /* Show the toggle button on smaller screens */
+  .sidebar-toggle-button {
+    display: block;
+  }
+  
+  /* The overlay is used to create a backdrop and close the menu on click */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001; /* Below sidebar, above content */
+  }
+}

@@ -1,0 +1,27 @@
+/* src/index.css */
+:root {
+  --bg-dark: #000000;
+  --bg-dark-secondary: #1C1C1E;
+  --bg-button: #000000;
+  --bg-light: #F5F5F7;
+  --bg-card: #FFFFFF;
+  --text-light: #FFFFFF;
+  --text-light-muted: #8A8A8E;
+  --text-dark: #0D0D0D;
+  --border-color: #EAEAEB;
+  --accent-blue: #4A44F2;
+  --accent-plus-icon: #FE3B82;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
