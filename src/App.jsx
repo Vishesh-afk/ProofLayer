@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import Sidebar from './components/Sidebar/Sidebar';
 import ImportScreen from './pages/ImportScreen/ImportScreen';
+import Dashboard from './pages/Dashboard/Dashboard';
 import './App.css';
 
 function App() {
@@ -21,7 +23,10 @@ function App() {
         >
           <FaBars />
         </button>
-        <ImportScreen />
+        <Routes>
+          <Route path="/" element={<ImportScreen />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
       </main>
       {isSidebarOpen && (
         <div
