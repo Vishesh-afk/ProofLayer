@@ -1,4 +1,6 @@
 /* src/App.css */
+
+
 .app-layout {
   display: flex;
   height: 100vh;
@@ -39,6 +41,14 @@
 
 /* --- Mobile Styles --- */
 @media (max-width: 768px) {
+  .main-view {
+    overflow-y: auto; /* Ensure the main view scrolls on mobile */
+    height: 100%;
+  }
+
+  .sidebar {
+    transition: transform 0.3s ease-in-out; /* Smooth transition for sidebar */
+  }
   .app-layout {
     /* The layout remains flex, but the sidebar will be positioned absolutely */
   }
@@ -58,5 +68,10 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1001; /* Below sidebar, above content */
+  }
+
+  .app-layout.sidebar-open .main-view {
+    filter: blur(4px) brightness(0.7);
+    pointer-events: none;
   }
 }

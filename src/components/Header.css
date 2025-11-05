@@ -1,8 +1,18 @@
 /* src/components/Header.css */
 .content-header {
-  padding: 32px 48px 24px 48px;
+  padding: 2rem 3rem 1.5rem 3rem;
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-card);
+}
+
+@media (max-width: 768px) {
+  .content-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+
+  .content-header h1 {
+    font-size: 1.5rem;
+  }
 }
 
 .content-header h1 {

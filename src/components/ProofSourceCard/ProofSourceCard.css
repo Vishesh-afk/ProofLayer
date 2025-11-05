@@ -7,66 +7,75 @@
   aspect-ratio: 262 / 213; /* Maintains the card's shape as it resizes */
   min-width: 200px; /* Prevents the card from becoming too small */
   position: relative;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
 .proof-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.proof-card:hover .icon-frame {
+  transform: scale(1.1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* This is the glassy, rectangular top area */
 .card-icon-area {
-  height: 75%; /* Changed to percentage to scale with the card */
+  height: 75%;
   -webkit-backdrop-filter: blur(2px) brightness(100%) saturate(100%);
   backdrop-filter: blur(2px) brightness(100%) saturate(100%);
   background-color: #ffffff1a;
-  border-radius: 25px;
+  border-radius: 25px 25px 0 0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4),
     inset 1px 0 0 rgba(255, 255, 255, 0.32),
     inset 0 -1px 1px rgba(0, 0, 0, 0.13), inset -1px 0 1px rgba(0, 0, 0, 0.11);
   display: flex;
-  height: 180px;
-  left: 1px;
-  overflow: hidden;
+  align-items: center; /* Center the icon frame vertically */
+  justify-content: center; /* Center the icon frame horizontally */
   position: absolute;
   top: 0;
-  width: 260px;
+  left: 0;
+  width: 100%;
+  transition: all 0.3s ease;
+}
 
-  /* This is the circular, glassy frame for the icon */
-  .icon-frame {
-    -webkit-backdrop-filter: blur(2px) brightness(100%) saturate(100%);
-    align-items: center;
-    backdrop-filter: blur(2px) brightness(100%) saturate(100%);
-    background-color: #ffffff73;
-    border-radius: 100px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 1px 0 0 rgba(255, 255, 255, 0.32),
-      inset 0 -1px 1px rgba(0, 0, 0, 0.13), inset -1px 0 1px rgba(0, 0, 0, 0.11);
-    display: flex;
-    height: 100px;
-    justify-content: center;
-    margin-left: 80px;
-    margin-top: 40px;
-    overflow: hidden;
-    width: 100px;
-  }
+/* This is the circular, glassy frame for the icon */
+.icon-frame {
+  -webkit-backdrop-filter: blur(2px) brightness(100%) saturate(100%);
+  align-items: center;
+  backdrop-filter: blur(2px) brightness(100%) saturate(100%);
+  background-color: #ffffff73;
+  border-radius: 50%; /* Make it a perfect circle */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 1px 0 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.13), inset -1px 0 1px rgba(0, 0, 0, 0.11);
+  display: flex;
+  height: 60%; /* Adjust size relative to the card area */
+  width: auto;
+  aspect-ratio: 1 / 1; /* Ensure it remains a circle */
+  justify-content: center;
+  overflow: hidden;
 }
 
 /* This is the solid white bottom area */
 .card-info {
   background-color: #ffffff;
-  border-radius: 0px 0px 25px 25px;
-  height: 25%; /* Changed to percentage */
+  border-radius: 0 0 25px 25px;
+  height: 25%;
   width: 100%;
   position: absolute;
   bottom: 0;
   left: 0;
-  overflow: hidden;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 1rem;
+  transition: all 0.3s ease;
 }
 
 .card-title {
@@ -81,15 +90,62 @@
 }
 
 /* Special style for the primary "Request" card */
+.proof-card.primary {
+  background-color: #333;
+  color: white;
+}
+
+.proof-card.primary .card-info {
+  background-color: #333;
+}
+
 .proof-card.primary .card-icon-area {
-  background-color: rgba(0, 0, 0, 0.75);
+  background: transparent;
 }
 
 .proof-card.primary .icon-frame {
-  background-color: transparent;
+  background: linear-gradient(180deg, #4A44F2 0%, #E323FF 100%);
+  color: white;
+  font-size: 2.5rem;
   box-shadow: none;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
-  color: white;
-  font-size: 2.5rem;
+}
+
+.proof-card.loading {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.proof-card.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+}
+
+.proof-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin-top: -20px;
+  margin-left: -20px;
+  border: 4px solid var(--accent-blue);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  z-index: 2;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

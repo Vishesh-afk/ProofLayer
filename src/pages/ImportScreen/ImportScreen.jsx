@@ -24,13 +24,17 @@ const sources = [
 ];
 
 const ImportScreen = () => {
-  // State to manage which source is selected to show the modal
   const [selectedSource, setSelectedSource] = useState(null);
+  const [loadingCard, setLoadingCard] = useState(null);
+  const [isBannerVisible, setBannerVisible] = useState(true);
 
   const handleCardClick = (source) => {
-    // Only open the modal for cards that are actual sources
     if (source.title !== 'Request a New Source') {
-      setSelectedSource(source);
+      setLoadingCard(source.id);
+      setTimeout(() => {
+        setSelectedSource(source);
+        setLoadingCard(null);
+      }, 400);
     }
   };
 
@@ -38,9 +42,19 @@ const ImportScreen = () => {
     setSelectedSource(null);
   };
 
+  const handleCloseBanner = () => {
+    setBannerVisible(false);
+  };
+
   return (
-    <> {/* Use a Fragment to render modal outside the main layout flow */}
+    <>
       <div className="screen-container">
+        {isBannerVisible && (
+          <div className="upgrade-banner">
+            <span>You are on Free Plan. <a href="#">Upgrade Now!</a></span>
+            <button className="close-banner-btn" onClick={handleCloseBanner}>&times;</button>
+          </div>
+        )}
         <header className="main-header">
           <h1 className="header-title">Add proof to your account</h1>
           <p className="header-subtitle">Connect your sources and import proofs to ProofLayer.</p>
@@ -53,27 +67,20 @@ const ImportScreen = () => {
                 key={source.id} 
                 icon={source.icon} 
                 title={source.title}
-                // Pass the click handler to each card
                 onClick={() => handleCardClick(source)}
+                isLoading={loadingCard === source.id}
               />
             ))}
             <ProofSourceCard
               icon={<FaPlus />}
               title="Request a New Source"
               isPrimary={true}
-              // You can add a specific handler for this button if needed
               onClick={() => console.log("Request new source clicked")}
             />
           </div>
-
-          <button className="request-button">
-            <span className="button-text">Request a New Source</span>
-            <FaPlus />
-          </button>
         </main>
       </div>
       
-      {/* Render the modal conditionally based on the selectedSource state */}
       <ImportModal source={selectedSource} onClose={handleCloseModal} />
     </>
   );

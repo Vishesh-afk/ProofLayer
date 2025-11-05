@@ -37,8 +37,7 @@ const Sidebar = () => {
         </nav>
       </div>
       <div className="sidebar-footer">
-        <p>You are on Free Plan</p>
-        <button className="upgrade-button">Upgrade ⚡</button>
+        {/* The upgrade button has been moved to the top banner */}
       </div>
     </aside>
   );
