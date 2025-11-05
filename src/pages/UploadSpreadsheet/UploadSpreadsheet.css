@@ -1,0 +1,91 @@
+.upload-spreadsheet-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background-color: #f8f8f8;
+  min-height: calc(100vh - 60px); /* Adjust based on header height */
+}
+
+.upload-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.upload-title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.upload-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.upload-main {
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-box {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 60px 40px;
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.upload-box:hover {
+  border-color: #007bff;
+}
+
+.upload-icon {
+  font-size: 4rem;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.upload-box p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 0px; /* Adjusted margin */
+}
+
+.choose-file-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.upload-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 40px; /* Match padding of upload-main */
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.supported-formats {
+  /* Styles for supported formats */
+}
+
+.maximum-size {
+  /* Styles for maximum size */
+}

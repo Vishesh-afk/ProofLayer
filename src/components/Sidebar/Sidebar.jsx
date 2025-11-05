@@ -1,6 +1,6 @@
-// src/components/Sidebar/Sidebar.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import { BsList, BsDownload, BsHeart, BsGraphUp, BsLink45Deg } from 'react-icons/bs';
 import './Sidebar.css';
 // Note the updated path to the assets folder
@@ -20,7 +20,8 @@ const Sidebar = () => {
         <nav className="sidebar-nav">
           <div className="nav-section">
             <p className="nav-title">COLLECT</p>
-            <Link to="/" className="nav-item active"><BsList /> New Proof</Link>
+            <Link to="/" className="nav-item"><BsList /> New Proof</Link>
+            <Link to="/import" className="nav-item"><BsDownload /> Import</Link>
           </div>
           <div className="nav-section">
             <p className="nav-title">MANAGE</p>
