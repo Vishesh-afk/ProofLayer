@@ -1,0 +1,55 @@
+.import-page {
+  padding: 48px;
+}
+
+.import-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.import-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.import-header p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.import-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.select-all-button {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.import-button {
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.import-filters {
+  margin-bottom: 24px;
+}
+
+.filters-button {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}

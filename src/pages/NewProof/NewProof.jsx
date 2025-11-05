@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaPencilAlt, FaFileExcel, FaPlus } from 'react-icons/fa';
 import ProofSourceCard from '../../components/ProofSourceCard/ProofSourceCard';
 import ImportModal from '../../components/ImportModal/ImportModal'; // Import the new modal
-import './ImportScreen.css';
+import './NewProof.css';
 
 // Import the logos from your assets folder
 import g2Logo from '../../assets/image-49.png';
@@ -23,13 +24,16 @@ const sources = [
   { id: 6, icon: <BrandLogo src={getappLogo} alt="Getapp" />, title: 'Getapp' },
 ];
 
-const ImportScreen = () => {
+const NewProof = () => {
   const [selectedSource, setSelectedSource] = useState(null);
   const [loadingCard, setLoadingCard] = useState(null);
   const [isBannerVisible, setBannerVisible] = useState(true);
+  const navigate = useNavigate();
 
   const handleCardClick = (source) => {
-    if (source.title !== 'Request a New Source') {
+    if (source.title === 'Upload Spreadsheet') {
+      navigate('/upload-spreadsheet');
+    } else if (source.title !== 'Request a New Source') {
       setLoadingCard(source.id);
       setTimeout(() => {
         setSelectedSource(source);
@@ -86,5 +90,4 @@ const ImportScreen = () => {
   );
 };
 
-export default ImportScreen;
-
+export default NewProof;
