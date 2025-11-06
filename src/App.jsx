@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { Routes, Route } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
+
 import Sidebar from './components/Sidebar/Sidebar';
 import NewProof from './pages/NewProof/NewProof';
 import Import from './pages/Import/Import';
@@ -17,30 +17,28 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="app-layout">
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <main className="main-view">
-          <button
-            className="sidebar-toggle-button"
-            onClick={toggleSidebar}
-          >
-            <FaBars />
-          </button>
-          <Routes>
-            <Route path="/" element={<NewProof />} />
-            <Route path="/import" element={<Import />} />
-            <Route path="/upload-spreadsheet" element={<UploadSpreadsheet />} />
-          </Routes>
-        </main>
-        {isSidebarOpen && (
-          <div
-            className="sidebar-overlay"
-            onClick={() => setSidebarOpen(false)}
-          ></div>
-        )}
-      </div>
-    </Router>
+    <div className="app-layout">
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <main className="main-view">
+        <button className="sidebar-toggle-button" onClick={toggleSidebar}>
+          <FaBars />
+        </button>
+
+        <Routes>
+          <Route path="/" element={<NewProof />} />
+          <Route path="/import" element={<Import />} />
+          <Route path="/upload-spreadsheet" element={<UploadSpreadsheet />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </main>
+
+      {isSidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+    </div>
   );
 }
 
