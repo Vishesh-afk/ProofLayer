@@ -1,4 +1,9 @@
 /* src/components/ProofCard/ProofCard.css */
+.proof-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
 .proof-card {
   background-color: var(--card-bg-color);
   border: 1px solid var(--border-color);
