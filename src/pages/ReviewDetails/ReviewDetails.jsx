@@ -27,11 +27,11 @@ const ReviewDetails = () => {
   return (
     <div className="review-details-page">
       <div className="review-details-sidebar">
+        <button className="back-button" onClick={() => navigate('/dashboard')}>
+          <BsArrowLeft />
+          <span>Customers</span>
+        </button>
         <div className="profile-banner">
-          <button className="back-button" onClick={() => navigate('/dashboard')}>
-            <BsArrowLeft />
-            <span>Customers</span>
-          </button>
           <div className="customer-profile">
             <img src={avatarSrc} alt={displayName} className="customer-avatar" />
             <h2>{displayName}</h2>

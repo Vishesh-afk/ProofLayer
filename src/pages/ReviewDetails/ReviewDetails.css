@@ -9,28 +9,15 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 /* sidebar-breadcrumb removed */
 
-.profile-banner {
-  background: linear-gradient(180deg, #7c3aed 0%, #ef4444 100%);
-  border-radius: 12px;
-  padding: 24px 16px;
-  color: #fff;
-  margin: -24px -24px 16px -24px;
-  position: relative;
-}
-
-.customer-profile {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
 .back-button {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 24px;
+  left: 24px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -40,6 +27,23 @@
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;
+  z-index: 10;
+}
+
+.profile-banner {
+  background: linear-gradient(180deg, #7c3aed 0%, #ef4444 100%);
+  border-radius: 12px;
+  padding: 24px 16px;
+  color: #fff;
+  margin-top: 48px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.customer-profile {
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 0;
 }
 
 .customer-avatar {
@@ -61,13 +65,15 @@
 
 .customer-details {
   margin-bottom: 24px;
+  margin-top: 8px;
 }
 
 .detail-item {
   display: grid;
   grid-template-columns: 110px 1fr;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  padding: 4px 0;
 }
 
 .detail-left {
@@ -122,6 +128,11 @@
   padding: 0;
 }
 
+.customer-actions {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
 .customer-actions button {
   width: 100%;
   padding: 12px;
@@ -130,18 +141,21 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .review-details-main {
   flex-grow: 1;
-  padding: 24px;
+  padding: 24px 32px;
   background-color: #fff;
+  overflow-y: auto;
 }
 
 .review-tabs {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .tab {
@@ -167,6 +181,7 @@
   padding: 24px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
 }
 
 .review-card-header {
@@ -195,11 +210,20 @@
 
 .review-card-body .review-rating {
   color: #f59e0b;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 18px;
 }
 
 .review-card-body h3 {
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.review-card-body p {
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+  color: #374151;
 }
 
 .tag-row {
