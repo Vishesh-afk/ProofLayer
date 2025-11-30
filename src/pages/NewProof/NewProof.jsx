@@ -33,6 +33,8 @@ const NewProof = () => {
   const handleCardClick = (source) => {
     if (source.title === 'Upload Spreadsheet') {
       navigate('/upload-spreadsheet');
+    } else if (source.title === 'Manual Import') {
+      navigate('/manual-import');
     } else if (source.title !== 'Request a New Source') {
       setLoadingCard(source.id);
       setTimeout(() => {

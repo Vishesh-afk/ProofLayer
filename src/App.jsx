@@ -8,6 +8,7 @@ import Import from './pages/Import/Import';
 import UploadSpreadsheet from './pages/UploadSpreadsheet/UploadSpreadsheet';
 import ReviewDetails from './pages/ReviewDetails/ReviewDetails';
 import Dashboard from './pages/Dashboard/Dashboard';
+import ManualImport from './pages/ManualImport/ManualImport';
 import './App.css';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/import" element={<Import />} />
             <Route path="/upload-spreadsheet" element={<UploadSpreadsheet />} />
+            <Route path="/manual-import" element={<ManualImport />} />
             <Route path="/review/:id" element={<ReviewDetails />} />
           </Routes>
         </main>
