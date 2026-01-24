@@ -1,32 +1,50 @@
-/* src/index.css */
-:root {
-  --primary-color: #6C5CE7;
-  --background-color: #F5F5F5;
-  --card-bg-color: #FFFFFF;
-  --text-primary-color: #000000;
-  --text-secondary-color: #8A8A8A;
-  --border-color: #E0E0E0;
-}
+@import "tailwindcss";
 
-html {
-  font-size: 16px;
-}
+@layer base {
+  :root {
+    --primary-color: #6C5CE7;
+    --background-color: #F5F5F5;
+    --card-bg-color: #FFFFFF;
+    --text-primary-color: #000000;
+    --text-secondary-color: #8A8A8A;
+    --border-color: #E0E0E0;
+  }
 
-@media (max-width: 768px) {
   html {
-    font-size: 14px;
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    html {
+      font-size: 14px;
+    }
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 }
 
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-primary-color);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@layer components {
+  /* Global Loading Styles */
+  .loading-container {
+    @apply flex flex-col items-center justify-center min-h-screen gap-4 bg-[var(--background-color)];
+  }
 
-* {
-  box-sizing: border-box;
+  .spinner {
+    @apply w-12 h-12 border-4 border-purple-200 border-t-[var(--primary-color)] rounded-full animate-spin;
+  }
+
+  .loading-container p {
+    @apply text-[var(--text-secondary-color)] text-base m-0;
+  }
 }

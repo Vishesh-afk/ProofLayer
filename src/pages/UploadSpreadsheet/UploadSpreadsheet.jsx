@@ -211,14 +211,64 @@ const UploadSpreadsheet = () => {
       // Parse file to get column names
       const columnNames = await parseFileHeaders(file);
       
+      // Store file in sessionStorage for later parsing
+      // Convert file to base64 for storage
+      const storeFile = () => {
+        return new Promise((resolve, reject) => {
+          if (file.name.toLowerCase().endsWith('.csv')) {
+            // For CSV files, read as text then convert to base64
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const text = e.target.result;
+              const base64 = btoa(unescape(encodeURIComponent(text)));
+              const fileData = {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: base64,
+                extension: file.name.substring(file.name.lastIndexOf('.') + 1),
+                isText: true
+              };
+              sessionStorage.setItem('uploadedFile', JSON.stringify(fileData));
+              resolve();
+            };
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsText(file);
+          } else {
+            // For Excel files, read as array buffer then convert to base64
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const bytes = new Uint8Array(e.target.result);
+              const binary = bytes.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+              const base64 = btoa(binary);
+              const fileData = {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: base64,
+                extension: file.name.substring(file.name.lastIndexOf('.') + 1),
+                isArrayBuffer: true
+              };
+              sessionStorage.setItem('uploadedFile', JSON.stringify(fileData));
+              resolve();
+            };
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsArrayBuffer(file);
+          }
+        });
+      };
+
+      await storeFile();
+      
       // Navigate to mapping page with file info and column names
       navigate('/map-columns', { 
         state: { 
           fileName: file.name,
           fileType: file.name.substring(file.name.lastIndexOf('.') + 1),
-          columnNames: columnNames // Pass the detected column names
+          columnNames: columnNames
         } 
       });
+      setIsProcessing(false);
     } catch (err) {
       console.error('File parsing error:', err);
       const errorMessage = err.message || 'Failed to parse file. Please ensure the file is not corrupted and contains headers in the first row.';

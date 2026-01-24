@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react'; // <-- ADDED useMemo
+import React, { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BsArrowUp } from 'react-icons/bs';
 import './MapColumns.css';
-// NEW IMPORT: Import the target fields and smart mapping function
-import { TARGET_FIELDS, smartMapColumns } from '../../utils/columnMapper'; 
+import { TARGET_FIELDS, smartMapColumns } from '../../utils/columnMapper';
+import { parseFullFile } from '../../utils/fileParser';
+import { saveTestimonialsBatch } from '../../services/firestoreService'; 
 
 const MapColumns = () => {
   const navigate = useNavigate();
@@ -67,23 +68,103 @@ const MapColumns = () => {
     }));
   };
 
-  const handleUpload = () => {
-    // UPDATED: Collect the final mappings, translating the user-facing label back to the internal key
-    const finalMapping = {};
-    Object.entries(fieldMappings).forEach(([label, userColumn]) => {
-      if (userColumn) {
-        // Find the internal key (e.g., 'name') from the label (e.g., 'Customer Name')
-        const targetField = TARGET_FIELDS.find(f => f.label === label);
-        if (targetField) {
-          finalMapping[targetField.key] = userColumn;
-        }
-      }
-    });
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
-    console.log('Final field mappings (Internal Key: User Column):', finalMapping);
-    
-    // Navigate to success page or back to dashboard
-    navigate('/dashboard');
+  const handleUpload = async () => {
+    setIsUploading(true);
+    setUploadError('');
+
+    try {
+      // Collect the final mappings, translating the user-facing label back to the internal key
+      const finalMapping = {};
+      Object.entries(fieldMappings).forEach(([label, userColumn]) => {
+        if (userColumn) {
+          // Find the internal key (e.g., 'name') from the label (e.g., 'Customer Name')
+          const targetField = TARGET_FIELDS.find(f => f.label === label);
+          if (targetField) {
+            finalMapping[targetField.key] = userColumn;
+          }
+        }
+      });
+
+      console.log('Final field mappings (Internal Key: User Column):', finalMapping);
+
+      // Get file data from sessionStorage
+      const fileDataStr = sessionStorage.getItem('uploadedFile');
+      if (!fileDataStr) {
+        throw new Error('File data not found. Please upload the file again.');
+      }
+
+      const fileData = JSON.parse(fileDataStr);
+      
+      // Reconstruct file object from stored data
+      let file;
+      if (fileData.isArrayBuffer) {
+        // For Excel files - convert base64 back to ArrayBuffer
+        const binary = atob(fileData.data);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: fileData.type });
+        file = new File([blob], fileData.name, { type: fileData.type });
+      } else if (fileData.isText) {
+        // For CSV files - convert base64 back to text
+        const text = decodeURIComponent(escape(atob(fileData.data)));
+        const blob = new Blob([text], { type: fileData.type });
+        file = new File([blob], fileData.name, { type: fileData.type });
+      } else {
+        throw new Error('Invalid file data format');
+      }
+
+      // Parse the full file
+      const rawData = await parseFullFile(file);
+      console.log('Parsed file data:', rawData);
+
+      // Transform data using mappings
+      const transformedData = rawData.map(row => {
+        const testimonial = {};
+        
+        // Map each field from the row to the testimonial object
+        Object.entries(finalMapping).forEach(([dbKey, userColumn]) => {
+          if (userColumn && row[userColumn] !== undefined) {
+            const value = row[userColumn];
+            // Only add non-empty values
+            if (value && String(value).trim().length > 0) {
+              testimonial[dbKey] = String(value).trim();
+            }
+          }
+        });
+
+        // Set default values for required fields if missing
+        if (!testimonial.name) testimonial.name = 'Unknown';
+        if (!testimonial.text) testimonial.text = '';
+        if (!testimonial.date) testimonial.date = new Date().toISOString().split('T')[0];
+
+        return testimonial;
+      }).filter(item => Object.keys(item).length > 0); // Filter out completely empty items
+
+      if (transformedData.length === 0) {
+        throw new Error('No valid data to upload after transformation.');
+      }
+
+      console.log('Transformed data to upload:', transformedData);
+
+      // Save to Firestore
+      const docIds = await saveTestimonialsBatch(transformedData);
+      console.log('Successfully saved testimonials. Document IDs:', docIds);
+
+      // Clear sessionStorage
+      sessionStorage.removeItem('uploadedFile');
+
+      // Navigate to dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Upload error:', error);
+      setUploadError(error.message || 'Failed to upload data. Please try again.');
+      setIsUploading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -131,11 +212,31 @@ const MapColumns = () => {
             ))}
           </div>
 
+          {uploadError && (
+            <div style={{ 
+              padding: '1rem', 
+              backgroundColor: '#fee2e2', 
+              color: '#dc2626', 
+              borderRadius: '8px', 
+              marginBottom: '1rem' 
+            }}>
+              {uploadError}
+            </div>
+          )}
+
           <div className="map-columns-actions">
-            <button className="upload-btn" onClick={handleUpload}>
-              <BsArrowUp /> Upload
+            <button 
+              className="upload-btn" 
+              onClick={handleUpload}
+              disabled={isUploading}
+            >
+              <BsArrowUp /> {isUploading ? 'Uploading...' : 'Upload'}
             </button>
-            <button className="cancel-btn" onClick={handleCancel}>
+            <button 
+              className="cancel-btn" 
+              onClick={handleCancel}
+              disabled={isUploading}
+            >
               Cancel
             </button>
           </div>

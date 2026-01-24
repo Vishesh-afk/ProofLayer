@@ -1,0 +1,27 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      keyframes: {
+        slideUp: {
+          'from': {
+            opacity: '0',
+            transform: 'translateY(30px)',
+          },
+          'to': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+      },
+      animation: {
+        slideUp: 'slideUp 0.4s ease-out',
+      },
+    },
+  },
+  plugins: [],
+}
