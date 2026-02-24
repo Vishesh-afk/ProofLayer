@@ -7,7 +7,7 @@ import { AuthProvider } from './contexts/AuthContext';
 
 // Components
 import Sidebar from './components/Sidebar/Sidebar';
-import { ProtectedRoute, PublicRoute, PrivilegedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import { ProtectedRoute, PublicRoute, PrivilegedRoute, AdminRoute } from './components/ProtectedRoute/ProtectedRoute';
 
 // Pages
 import Login from './pages/Login/Login';
@@ -21,8 +21,10 @@ import ReviewDetails from './pages/ReviewDetails/ReviewDetails';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ManualImport from './pages/ManualImport/ManualImport';
 import MapColumns from './pages/MapColumns/MapColumns';
+import Settings from './pages/Settings/Settings';
+import ManageUsers from './pages/ManageUsers/ManageUsers';
 
-import './App.css';
+
 
 function App() {
   return (
@@ -68,11 +70,11 @@ function AppLayout() {
   };
 
   return (
-    <div className="app-layout">
+    <div className="flex h-screen w-screen bg-[var(--background-color)] overflow-hidden relative">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <main className="main-view">
+      <main className="flex-grow flex flex-col overflow-y-auto h-screen max-md:h-full">
         <button
-          className="sidebar-toggle-button"
+          className="hidden max-md:block absolute top-6 left-6 z-[1100] bg-white border border-gray-200 rounded-lg p-2 cursor-pointer text-2xl text-gray-800"
           onClick={toggleSidebar}
         >
           <FaBars />
@@ -111,11 +113,21 @@ function AppLayout() {
               <ManualImport />
             </PrivilegedRoute>
           } />
+
+          {/* Manage Users - Admin only */}
+          <Route path="/manage-users" element={
+            <AdminRoute>
+              <ManageUsers />
+            </AdminRoute>
+          } />
+
+          {/* Settings - All authenticated users (Admin section handled inside) */}
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
       {isSidebarOpen && (
         <div
-          className="sidebar-overlay"
+          className="hidden max-md:block fixed inset-0 bg-black/50 z-[1001]"
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}

@@ -1,14 +1,15 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { USER_ROLES } from '../../constants/roles';
 
 /**
- * ProtectedRoute - Requires authentication
- * Redirects to login if not authenticated
+ * ProtectedRoute - Requires authentication AND a completed profile.
+ * - If not authenticated → redirects to /login
+ * - If authenticated but no Firestore profile → redirects to /onboarding
  */
 export const ProtectedRoute = ({ children }) => {
-    const { currentUser, loading } = useAuth();
+    const { currentUser, userProfile, loading } = useAuth();
 
     if (loading) {
         return (
@@ -21,6 +22,11 @@ export const ProtectedRoute = ({ children }) => {
 
     if (!currentUser) {
         return <Navigate to="/login" replace />;
+    }
+
+    // User is authenticated but hasn't completed onboarding (no Firestore profile)
+    if (!userProfile) {
+        return <Navigate to="/onboarding" replace state={{ uid: currentUser.uid, email: currentUser.email }} />;
     }
 
     return children;
@@ -31,7 +37,7 @@ export const ProtectedRoute = ({ children }) => {
  * Redirects to unauthorized page if user doesn't have required role
  */
 export const RoleProtectedRoute = ({ children, allowedRoles = [] }) => {
-    const { currentUser, userRole, loading } = useAuth();
+    const { currentUser, userRole, userProfile, loading } = useAuth();
 
     if (loading) {
         return (
@@ -46,8 +52,18 @@ export const RoleProtectedRoute = ({ children, allowedRoles = [] }) => {
         return <Navigate to="/login" replace />;
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
-        return <Navigate to="/unauthorized" replace />;
+    if (!userProfile) {
+        return <Navigate to="/onboarding" replace state={{ uid: currentUser.uid, email: currentUser.email }} />;
+    }
+
+    // Require approval for privileged access
+    if (allowedRoles.length > 0) {
+        if (!userProfile.isApproved) {
+            return <Navigate to="/unauthorized" replace />;
+        }
+        if (!allowedRoles.includes(userRole)) {
+            return <Navigate to="/unauthorized" replace />;
+        }
     }
 
     return children;
@@ -77,10 +93,11 @@ export const PrivilegedRoute = ({ children }) => {
 
 /**
  * PublicRoute - Only accessible when NOT logged in
- * Redirects to dashboard if already authenticated
+ * Redirects to dashboard if already authenticated WITH a profile.
+ * If authenticated but no profile, allows access (so they can reach onboarding).
  */
 export const PublicRoute = ({ children }) => {
-    const { currentUser, loading } = useAuth();
+    const { currentUser, userProfile, loading } = useAuth();
 
     if (loading) {
         return (
@@ -91,7 +108,8 @@ export const PublicRoute = ({ children }) => {
         );
     }
 
-    if (currentUser) {
+    // Only redirect to dashboard if user is fully set up (has profile)
+    if (currentUser && userProfile) {
         return <Navigate to="/dashboard" replace />;
     }
 

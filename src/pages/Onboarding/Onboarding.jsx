@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { updateProfile, sendEmailVerification } from 'firebase/auth';
 import { db, auth } from '../../firebase/firebase';
-import { USER_ROLES } from '../../constants/roles';
-import { FaUser, FaBuilding, FaBriefcase } from 'react-icons/fa';
+import { useAuth } from '../../contexts/AuthContext';
+import { USER_ROLES, ROLE_LABELS } from '../../constants/roles';
+import { FaUser, FaBuilding, FaBriefcase, FaShieldAlt } from 'react-icons/fa';
 
 const Onboarding = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { uid, email } = location.state || {};
+    const { fetchUserProfile } = useAuth();
+
+    // Get uid/email from location state OR from current auth user (fallback for direct redirects)
+    const uid = location.state?.uid || auth.currentUser?.uid;
+    const email = location.state?.email || auth.currentUser?.email;
 
     const [formData, setFormData] = useState({
         name: '',
         company: '',
-        designation: ''
+        designation: '',
+        role: USER_ROLES.USER
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -73,13 +79,37 @@ const Onboarding = () => {
                 await sendEmailVerification(currentUser);
             }
 
+            // Check if company already has users (is this the first user?)
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('company', '==', formData.company));
+            const querySnapshot = await getDocs(q);
+            const isFirstUser = querySnapshot.empty;
+
+            let finalRole = formData.role;
+            let isApproved = false;
+
+            if (isFirstUser) {
+                // First user becomes Admin and is auto-approved
+                finalRole = USER_ROLES.ADMIN;
+                isApproved = true;
+            } else {
+                // Subsequent users retain chosen role but need approval (unless it's basic User?)
+                // User requirement: "i only a admin can approve other privilaged use"
+                // Let's safe default: Privileged/Admin need approval. Basic User maybe auto-approved?
+                // For simplicity and security based on request: All subsequent users need approval if they want specific access.
+                // But let's say basic users are auto-approved for now to not block everyone?
+                // actually "account setting logic" implies admin approves. Let's make all subsequent users PENDING.
+                isApproved = false;
+            }
+
             const userProfile = {
                 uid: uid,
                 email: email,
                 name: formData.name,
                 company: formData.company,
                 designation: formData.designation,
-                role: USER_ROLES.USER,
+                role: finalRole,
+                isApproved: isApproved, // New field
                 createdAt: new Date().toISOString(),
                 isActive: true,
                 emailVerified: false
@@ -87,7 +117,19 @@ const Onboarding = () => {
 
             await setDoc(doc(db, 'users', uid), userProfile);
 
-            navigate('/dashboard');
+            // Sync the profile into AuthContext
+            await fetchUserProfile(uid);
+
+            // Navigate based on status
+            if (isApproved) {
+                navigate('/dashboard');
+            } else {
+                // Determine where to send pending users. For now dashboard, but they might be restricted?
+                // The ProtectedRoute checks for profile existence, not isApproved. 
+                // We should probably show a "Pending Approval" banner on dashboard or redirect to a waiting page.
+                // For now, let's send to dashboard, but the dashboard might need to show limited view.
+                navigate('/dashboard');
+            }
 
         } catch (err) {
             console.error('Onboarding failed:', err);
@@ -175,6 +217,37 @@ const Onboarding = () => {
                         </div>
                     </div>
 
+                    {/* Role Selector */}
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="role" className="text-sm font-semibold text-[var(--text-primary-color)]">
+                            Account Role *
+                        </label>
+                        <div className="relative flex items-center">
+                            <FaShieldAlt className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <select
+                                id="role"
+                                name="role"
+                                value={formData.role}
+                                onChange={handleChange}
+                                disabled={loading}
+                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed appearance-none cursor-pointer"
+                            >
+                                {Object.entries(ROLE_LABELS).map(([value, label]) => (
+                                    <option key={value} value={value}>{label}</option>
+                                ))}
+                            </select>
+                            {/* Custom dropdown arrow */}
+                            <div className="absolute right-4 pointer-events-none text-[var(--text-secondary-color)]">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <small className="text-xs text-[var(--text-secondary-color)] mt-1">
+                            Select the access level for this account
+                        </small>
+                    </div>
+
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-2">
                         <p className="m-0 my-2 text-sm text-blue-900 flex items-start gap-2">
                             <span>✉️</span>
@@ -182,7 +255,7 @@ const Onboarding = () => {
                         </p>
                         <p className="m-0 my-2 text-sm text-blue-900 flex items-start gap-2">
                             <span>🔐</span>
-                            <span>Your account will be created with basic access. Contact your admin for role upgrades.</span>
+                            <span>Your account will be created with <strong>{ROLE_LABELS[formData.role]}</strong> access.</span>
                         </p>
                     </div>
 

@@ -57,9 +57,13 @@ const Signup = () => {
             setError('');
             setLoading(true);
 
+            // Trim email to prevent accidentally creating accounts with spaces
+            const cleanEmail = formData.email.trim();
+            console.log('Attempting signup for:', cleanEmail);
+
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
-                formData.email,
+                cleanEmail,
                 formData.password
             );
 

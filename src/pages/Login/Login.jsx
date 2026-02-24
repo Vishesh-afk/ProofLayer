@@ -24,15 +24,15 @@ const Login = () => {
         try {
             setError('');
             setLoading(true);
-            await login(email, password);
+            const cleanEmail = email.trim();
+            console.log('Attempting login for:', cleanEmail);
+            await login(cleanEmail, password);
             navigate('/dashboard');
         } catch (err) {
             console.error('Login failed:', err);
 
-            if (err.code === 'auth/user-not-found') {
-                setError('No account found with this email');
-            } else if (err.code === 'auth/wrong-password') {
-                setError('Incorrect password');
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+                setError('Invalid email or password. Please check your credentials.');
             } else if (err.code === 'auth/invalid-email') {
                 setError('Invalid email address');
             } else if (err.code === 'auth/user-disabled') {
