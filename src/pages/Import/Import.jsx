@@ -112,20 +112,22 @@ const Import = () => {
   }
 
   return (
-    <div className="import-page">
-      <div className="import-header">
-        <h1>Review Imported Testimonials</h1>
-        <p>Select testimonials to add to your dashboard ({scrapedTestimonials.length} pending)</p>
-        <div className="import-actions">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto animate-fadeIn min-h-[calc(100vh-80px)]">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6 border-b border-border pb-6">
+        <div>
+          <h1 className="font-heading text-3xl font-bold text-content-primary m-0 tracking-tight">Review Imported Testimonials</h1>
+          <p className="text-content-secondary m-0 mt-2 text-base">Select testimonials to add to your dashboard ({scrapedTestimonials.length} pending)</p>
+        </div>
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <button
-            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex-1 md:flex-none px-4 py-2.5 bg-surface border border-border rounded-lg text-sm font-medium text-content-primary hover:bg-background hover:border-content-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm"
             onClick={handleSelectAll}
             disabled={scrapedTestimonials.length === 0}
           >
             {selectedTestimonials.length === scrapedTestimonials.length && scrapedTestimonials.length > 0 ? 'Deselect All' : 'Select All'}
           </button>
           <button
-            className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="flex-1 md:flex-none px-5 py-2.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 border-none"
             onClick={handleImport}
             disabled={selectedTestimonials.length === 0 || importing}
           >
@@ -136,25 +138,29 @@ const Import = () => {
       </div>
 
       {scrapedTestimonials.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-300 mt-4">
-          <p className="text-lg mb-2">No pending imports found.</p>
-          <p className="text-sm">Use "New Proof" to import from G2 or other sources.</p>
+        <div className="text-center py-16 px-6 text-content-muted bg-surface rounded-2xl border-2 border-dashed border-border mt-4 flex flex-col items-center justify-center shadow-sm">
+          <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4 border border-border">
+            <svg className="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+          </div>
+          <p className="text-xl font-semibold text-content-primary mb-2">No pending imports found</p>
+          <p className="text-base text-content-secondary max-w-sm mb-6">Use "New Proof" to import from G2, Capterra, or other sources to start building your Wall of Love.</p>
           <button
             onClick={() => navigate('/new-proof')}
-            className="mt-4 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-medium hover:bg-purple-200"
+            className="px-6 py-3 bg-primary-50 text-primary-700 border border-primary-200 rounded-xl font-medium hover:bg-primary-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             Start New Import
           </button>
         </div>
       ) : (
-        <div className="testimonial-list">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-max">
           {scrapedTestimonials.map((testimonial) => (
-            <TestimonialCard
-              key={testimonial.id}
-              testimonial={testimonial}
-              onSelect={handleSelectTestimonial}
-              isSelected={selectedTestimonials.includes(testimonial.id)}
-            />
+            <div key={testimonial.id} className="h-full">
+              <TestimonialCard
+                testimonial={testimonial}
+                onSelect={handleSelectTestimonial}
+                isSelected={selectedTestimonials.includes(testimonial.id)}
+              />
+            </div>
           ))}
         </div>
       )}

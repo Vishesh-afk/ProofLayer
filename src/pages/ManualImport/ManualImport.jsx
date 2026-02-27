@@ -55,28 +55,30 @@ const ManualImport = () => {
   };
 
   return (
-    <div className="manual-import-container">
-      <header className="manual-import-header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          <BsArrowLeft />
+    <div className="flex flex-col min-h-screen bg-background animate-fadeIn">
+      <header className="bg-surface border-b border-border px-8 md:px-12 py-8 flex items-start flex-col gap-2 shadow-sm relative w-full">
+        <button className="absolute left-4 md:left-8 top-8 p-2 rounded-full hover:bg-background transition-colors text-content-secondary hover:text-content-primary focus:outline-none focus:ring-2 focus:ring-primary-500" onClick={() => navigate('/')}>
+          <BsArrowLeft className="text-xl" />
         </button>
-        <h1 className="manual-import-title">Manual import</h1>
-        <p className="manual-import-subtitle">Manually add video, text or screengrabs proof to your account.</p>
+        <div className="ml-10 md:ml-12">
+          <h1 className="font-heading text-3xl font-bold text-content-primary m-0 tracking-tight">Manual import</h1>
+          <p className="text-sm text-content-secondary font-medium m-0 mt-1">Manually add video, text or screengrabs proof to your account.</p>
+        </div>
       </header>
 
-      <main className="manual-import-main">
-        <div className="manual-import-form-card">
-          <div className="proof-type-selector">
-            <button type="button" className="proof-type-button active">
+      <main className="flex-grow overflow-y-auto px-6 md:px-12 py-10 flex flex-col items-center w-full">
+        <div className="w-full max-w-4xl bg-surface rounded-2xl p-8 lg:p-10 border border-border shadow-soft">
+          <div className="flex justify-center mb-10 pb-6 border-b border-border/50">
+            <button type="button" className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium transition-all bg-primary-50 text-primary-700 border border-primary-200 shadow-sm hover:bg-primary-100">
               <BsList /> Text testimonial
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="manual-import-form">
-            <div className="form-section">
-              <div className="form-group">
-                <label htmlFor="customerName" className="form-label">
-                  Customer name <span className="required">*</span>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+            <div className="border-t border-border/50 pt-8 flex flex-col gap-6 first:border-0 first:pt-0">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="customerName" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
+                  Customer name <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
                   type="text"
@@ -85,13 +87,13 @@ const ManualImport = () => {
                   value={formData.customerName}
                   onChange={handleInputChange}
                   placeholder="Your Name"
-                  className="form-input"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                   required
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="designation" className="form-label">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="designation" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                   Designation
                 </label>
                 <input
@@ -101,21 +103,21 @@ const ManualImport = () => {
                   value={formData.designation}
                   onChange={handleInputChange}
                   placeholder="Your Designation"
-                  className="form-input"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                 />
               </div>
             </div>
 
-            <div className="form-section">
-              <div className="form-group">
-                <label className="form-label">Avatar</label>
-                <div className="file-upload-group">
-                  <div className="file-upload-icon">
+            <div className="border-t border-border/50 pt-8 flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-content-secondary uppercase tracking-wider">Avatar</label>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-background border border-border rounded-full flex items-center justify-center text-content-muted shadow-sm overflow-hidden">
                     <FaUser />
                   </div>
                   <button
                     type="button"
-                    className="file-upload-button"
+                    className="px-4 py-2 bg-background border border-border rounded-lg text-sm font-medium text-content-primary hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                     onClick={() => document.getElementById('avatar-upload').click()}
                   >
                     Pick an Image
@@ -130,8 +132,8 @@ const ManualImport = () => {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="email" className="form-label">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="email" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                   Email
                 </label>
                 <input
@@ -141,21 +143,21 @@ const ManualImport = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Your Email"
-                  className="form-input"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                 />
               </div>
             </div>
 
-            <div className="form-section">
-              <div className="form-group">
-                <label className="form-label">Company Logo</label>
-                <div className="file-upload-group">
-                  <div className="file-upload-icon">
+            <div className="border-t border-border/50 pt-8 flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-content-secondary uppercase tracking-wider">Company Logo</label>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-background border border-border rounded-full flex items-center justify-center text-content-muted shadow-sm overflow-hidden">
                     <FaBuilding />
                   </div>
                   <button
                     type="button"
-                    className="file-upload-button"
+                    className="px-4 py-2 bg-background border border-border rounded-lg text-sm font-medium text-content-primary hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                     onClick={() => document.getElementById('company-logo-upload').click()}
                   >
                     Pick an Image
@@ -171,10 +173,10 @@ const ManualImport = () => {
               </div>
             </div>
 
-            <div className="form-section two-column">
-              <div className="form-column">
-                <div className="form-group">
-                  <label htmlFor="company" className="form-label">
+            <div className="border-t border-border/50 pt-8 flex grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="company" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Company
                   </label>
                   <input
@@ -184,12 +186,12 @@ const ManualImport = () => {
                     value={formData.company}
                     onChange={handleInputChange}
                     placeholder="Your Company"
-                    className="form-input"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="companyWebsite" className="form-label">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="companyWebsite" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Company Website
                   </label>
                   <input
@@ -199,12 +201,12 @@ const ManualImport = () => {
                     value={formData.companyWebsite}
                     onChange={handleInputChange}
                     placeholder="www.example.com"
-                    className="form-input"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="companySize" className="form-label">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="companySize" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Company Size
                   </label>
                   <select
@@ -212,7 +214,7 @@ const ManualImport = () => {
                     name="companySize"
                     value={formData.companySize}
                     onChange={handleInputChange}
-                    className="form-select"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none appearance-none cursor-pointer pr-10"
                   >
                     <option value="">Select Company Size</option>
                     <option value="1-10">1-10</option>
@@ -225,9 +227,9 @@ const ManualImport = () => {
                 </div>
               </div>
 
-              <div className="form-column">
-                <div className="form-group">
-                  <label htmlFor="team" className="form-label">
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="team" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Team
                   </label>
                   <input
@@ -237,12 +239,12 @@ const ManualImport = () => {
                     value={formData.team}
                     onChange={handleInputChange}
                     placeholder="Your Team"
-                    className="form-input"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="region" className="form-label">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="region" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Region
                   </label>
                   <input
@@ -252,12 +254,12 @@ const ManualImport = () => {
                     value={formData.region}
                     onChange={handleInputChange}
                     placeholder="Your Region"
-                    className="form-input"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="proofType" className="form-label">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="proofType" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Proof Type
                   </label>
                   <select
@@ -265,7 +267,7 @@ const ManualImport = () => {
                     name="proofType"
                     value={formData.proofType}
                     onChange={handleInputChange}
-                    className="form-select"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none appearance-none cursor-pointer pr-10"
                   >
                     <option value="">Select Proof Type</option>
                     <option value="text">Text</option>
@@ -276,14 +278,14 @@ const ManualImport = () => {
               </div>
             </div>
 
-            <div className="form-section">
-              <div className="form-group">
-                <label className="form-label">Ratings</label>
-                <div className="rating-stars">
+            <div className="border-t border-border/50 pt-8 flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-content-secondary uppercase tracking-wider">Ratings</label>
+                <div className="flex items-center gap-2 text-2xl mt-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
                       key={star}
-                      className={`star-icon ${formData.rating >= star ? 'filled' : ''}`}
+                      className={`cursor-pointer hover:scale-110 transition-transform ${formData.rating >= star ? 'text-yellow-400' : 'text-gray-200'}`}
                       onClick={() => handleRatingClick(star)}
                     />
                   ))}
@@ -291,9 +293,9 @@ const ManualImport = () => {
               </div>
             </div>
 
-            <div className="form-section">
-              <div className="form-group">
-                <label htmlFor="testimonialTitle" className="form-label">
+            <div className="border-t border-border/50 pt-8 flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="testimonialTitle" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                   Testimonial Title
                 </label>
                 <input
@@ -303,14 +305,14 @@ const ManualImport = () => {
                   value={formData.testimonialTitle}
                   onChange={handleInputChange}
                   placeholder="Write your testimonial title"
-                  className="form-input"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none"
                 />
               </div>
             </div>
 
-            <div className="form-section">
-              <div className="form-group">
-                <label htmlFor="testimonial" className="form-label">
+            <div className="border-t border-border/50 pt-8 flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="testimonial" className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                   Testimonial
                 </label>
                 <textarea
@@ -319,14 +321,14 @@ const ManualImport = () => {
                   value={formData.testimonial}
                   onChange={handleInputChange}
                   placeholder="Write your testimonial"
-                  className="form-textarea"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-content-primary placeholder:text-content-muted focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm outline-none resize-y"
                   rows="6"
                 />
               </div>
             </div>
 
-            <div className="form-submit-section">
-              <button type="submit" className="submit-button">
+            <div className="flex justify-end pt-8 border-t border-border mt-4">
+              <button type="submit" className="px-8 py-3 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 hover:-translate-y-0.5 hover:shadow-float shadow-sm border-none focus:outline-none focus:ring-4 focus:ring-primary-50 transition-all">
                 Submit
               </button>
             </div>

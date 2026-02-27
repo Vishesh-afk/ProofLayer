@@ -121,12 +121,12 @@ const Signup = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#667eea] to-[#764ba2] p-8 md:p-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-12 md:p-8 w-full max-w-md animate-[slideUp_0.4s_ease-out]">
+        <div className="min-h-screen flex items-center justify-center bg-background p-8 md:p-4">
+            <div className="bg-surface rounded-2xl shadow-float p-12 md:p-8 w-full max-w-md animate-slideUp">
                 <div className="text-center mb-8">
-                    <div className="text-4xl font-bold text-[var(--primary-color)] mb-4">◆ ProofLayer</div>
-                    <h1 className="text-3xl md:text-2xl font-bold text-[var(--text-primary-color)] mb-2">Create Account</h1>
-                    <p className="text-[var(--text-secondary-color)] text-base">Sign up to start managing your testimonials</p>
+                    <div className="font-heading text-4xl font-bold text-indigo-600 mb-4 tracking-tight">◆ ProofLayer</div>
+                    <h1 className="font-heading text-3xl md:text-2xl font-bold text-slate-800 mb-2 tracking-tight">Create Account</h1>
+                    <p className="text-slate-500 text-base m-0">Sign up to start managing your testimonials</p>
                 </div>
 
                 {error && (
@@ -138,11 +138,11 @@ const Signup = () => {
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="email" className="text-sm font-semibold text-[var(--text-primary-color)]">
+                        <label htmlFor="email" className="text-sm font-semibold text-content-primary">
                             Email Address
                         </label>
                         <div className="relative flex items-center">
-                            <FaEnvelope className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaEnvelope className="absolute left-4 text-content-muted text-base pointer-events-none" />
                             <input
                                 type="email"
                                 id="email"
@@ -152,17 +152,17 @@ const Signup = () => {
                                 onChange={handleChange}
                                 disabled={loading}
                                 autoComplete="email"
-                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-slate-200 rounded-lg text-base transition-all duration-200 bg-surface text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="password" className="text-sm font-semibold text-[var(--text-primary-color)]">
+                        <label htmlFor="password" className="text-sm font-semibold text-content-primary">
                             Password
                         </label>
                         <div className="relative flex items-center">
-                            <FaLock className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaLock className="absolute left-4 text-content-muted text-base pointer-events-none" />
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
@@ -172,26 +172,26 @@ const Signup = () => {
                                 onChange={handleChange}
                                 disabled={loading}
                                 autoComplete="new-password"
-                                className="w-full py-3.5 px-4 pl-11 pr-12 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 px-4 pl-11 pr-12 border-[1.5px] border-slate-200 rounded-lg text-base transition-all duration-200 bg-surface text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 tabIndex="-1"
-                                className="absolute right-4 bg-transparent border-none text-[var(--text-secondary-color)] cursor-pointer p-2 flex items-center transition-colors duration-200 hover:text-[var(--primary-color)]"
+                                className="absolute right-4 bg-transparent border-none text-slate-400 cursor-pointer p-2 flex items-center transition-colors duration-200 hover:text-indigo-600 focus:outline-none"
                             >
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
                         </div>
-                        <small className="text-xs text-[var(--text-secondary-color)] mt-1">Minimum 6 characters</small>
+                        <small className="text-xs text-content-muted mt-1">Minimum 6 characters</small>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="confirmPassword" className="text-sm font-semibold text-[var(--text-primary-color)]">
+                        <label htmlFor="confirmPassword" className="text-sm font-semibold text-content-primary">
                             Confirm Password
                         </label>
                         <div className="relative flex items-center">
-                            <FaLock className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaLock className="absolute left-4 text-content-muted text-base pointer-events-none" />
                             <input
                                 type={showConfirmPassword ? 'text' : 'password'}
                                 id="confirmPassword"
@@ -201,13 +201,13 @@ const Signup = () => {
                                 onChange={handleChange}
                                 disabled={loading}
                                 autoComplete="new-password"
-                                className="w-full py-3.5 px-4 pl-11 pr-12 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 px-4 pl-11 pr-12 border-[1.5px] border-slate-200 rounded-lg text-base transition-all duration-200 bg-surface text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 tabIndex="-1"
-                                className="absolute right-4 bg-transparent border-none text-[var(--text-secondary-color)] cursor-pointer p-2 flex items-center transition-colors duration-200 hover:text-[var(--primary-color)]"
+                                className="absolute right-4 bg-transparent border-none text-slate-400 cursor-pointer p-2 flex items-center transition-colors duration-200 hover:text-indigo-600 focus:outline-none"
                             >
                                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
@@ -217,7 +217,7 @@ const Signup = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="bg-[var(--primary-color)] text-white border-none py-3.5 px-6 rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 mt-2 flex items-center justify-center gap-2 hover:bg-[#5a4bc7] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(108,92,231,0.3)] active:translate-y-0 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        className="bg-indigo-600 text-white border-none py-3.5 px-6 rounded-lg text-base font-medium cursor-pointer transition-all duration-200 mt-2 flex items-center justify-center gap-2 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         {loading ? (
                             <>
@@ -230,26 +230,26 @@ const Signup = () => {
                     </button>
                 </form>
 
-                <div className="flex items-center text-center my-6 text-[var(--text-secondary-color)] text-sm">
-                    <div className="flex-1 border-b border-[var(--border-color)]"></div>
-                    <span className="px-4 font-medium">OR</span>
-                    <div className="flex-1 border-b border-[var(--border-color)]"></div>
+                <div className="flex items-center text-center my-6 text-content-muted text-sm">
+                    <div className="flex-1 border-b border-border"></div>
+                    <span className="px-4 font-medium uppercase tracking-wider text-xs">or</span>
+                    <div className="flex-1 border-b border-border"></div>
                 </div>
 
                 <button
                     type="button"
                     onClick={handleGoogleSignUp}
                     disabled={loading}
-                    className="w-full bg-white text-gray-700 border-[1.5px] border-[var(--border-color)] py-3.5 px-6 rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 flex items-center justify-center gap-3 mb-4 hover:bg-gray-50 hover:border-[#4285f4] hover:shadow-[0_2px_8px_rgba(66,133,244,0.2)] active:scale-[0.98] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-[var(--border-color)]"
+                    className="w-full bg-surface text-content-primary border-[1.5px] border-border py-3.5 px-6 rounded-lg text-base font-medium cursor-pointer transition-all duration-200 flex items-center justify-center gap-3 mb-4 hover:bg-gray-50 text-gray-700 hover:border-gray-300 hover:shadow-sm active:scale-[0.98] disabled:bg-gray-100 disabled:text-content-muted disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
                 >
                     <FaGoogle className="text-xl text-[#4285f4]" />
                     Sign up with Google
                 </button>
 
-                <div className="text-center mt-8 pt-8 border-t border-[var(--border-color)]">
-                    <p className="text-[var(--text-secondary-color)] text-base m-0">
+                <div className="text-center mt-8 pt-6 border-t border-slate-200">
+                    <p className="text-slate-500 text-sm m-0">
                         Already have an account?{' '}
-                        <Link to="/login" className="text-[var(--primary-color)] font-semibold transition-colors duration-200 hover:text-[#5a4bc7] hover:underline">
+                        <Link to="/login" className="text-indigo-600 font-medium transition-colors duration-200 hover:text-indigo-700 hover:underline">
                             Sign In
                         </Link>
                     </p>

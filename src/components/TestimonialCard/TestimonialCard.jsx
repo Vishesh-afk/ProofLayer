@@ -1,71 +1,62 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./TestimonialCard.css";
 
 const TestimonialCard = ({ testimonial, onSelect, isSelected }) => {
   const navigate = useNavigate();
 
   const handleCheckboxChange = (e) => {
-    // STOP propagation so the Card click (navigation) doesn't trigger
     e.stopPropagation();
-
-    // DO NOT use e.preventDefault() here; it stops the checkbox from working
-
     if (onSelect) {
       onSelect(testimonial.id);
     }
   };
 
   const handleCardClick = (e) => {
-    // Navigate only if we didn't click the checkbox wrapper
     if (!e.target.closest('.testimonial-checkbox-wrapper')) {
       navigate(`/review/${testimonial.id}`);
     }
   };
 
   return (
-    <div className={`testimonial-card-wrapper ${isSelected ? 'selected' : ''}`}>
-      {/* Removed onClick from this wrapper; let the input handle the event */}
-      <div className="testimonial-checkbox-wrapper">
+    <div className="relative mb-6 group">
+      <div className="testimonial-checkbox-wrapper absolute top-4 right-4 z-10 cursor-pointer">
         <input
           type="checkbox"
-          className="testimonial-checkbox"
+          className="w-5 h-5 cursor-pointer accent-primary-600 rounded focus:ring-primary-500 focus:ring-2 focus:ring-offset-1 transition duration-150 ease-in-out"
           checked={isSelected || false}
-          onChange={handleCheckboxChange} // Use onChange for React checkboxes
-        // Removed onClick (redundant)
-        // Removed readOnly (prevented interaction)
+          onChange={handleCheckboxChange}
         />
       </div>
 
       <div
-        className={`testimonial-card ${isSelected ? 'selected' : ''}`}
+        className={`bg-surface rounded-xl p-6 shadow-sm border-2 transition-all duration-300 ease-in-out cursor-pointer hover:shadow-float hover:-translate-y-1 ${isSelected ? 'border-primary-600 ring-4 ring-primary-50' : 'border-transparent'}`}
         onClick={handleCardClick}
       >
-        <div className="testimonial-card-header">
+        <div className="flex items-center mb-4">
           {testimonial.avatar ? (
-            <img src={testimonial.avatar} alt={testimonial.author} className="testimonial-avatar" onError={(e) => e.target.style.display = 'none'} />
+            <img src={testimonial.avatar} alt={testimonial.author} className="w-12 h-12 rounded-full mr-4 object-cover shadow-sm" onError={(e) => e.target.style.display = 'none'} />
           ) : (
-            <div className="testimonial-avatar-fallback" style={{
-              width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#eee',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 'bold', color: '#666'
-            }}>
+            <div className="w-12 h-12 rounded-full bg-primary-50 text-primary-700 mr-4 flex items-center justify-center text-lg font-bold shadow-sm">
               {testimonial.author?.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="testimonial-author">
-            <p className="testimonial-author-name">{testimonial.author}</p>
-            <p className="testimonial-author-handle">{testimonial.handle || testimonial.role}</p>
-          </div>
-          <div className="testimonial-rating">
-            <span style={{ color: '#FFB800' }}>{"★".repeat(Math.round(testimonial.rating || 0))}</span>
-            <span style={{ color: '#E0E0E0' }}>{"★".repeat(5 - Math.round(testimonial.rating || 0))}</span>
+          <div className="flex-grow">
+            <p className="font-semibold text-content-primary m-0">{testimonial.author}</p>
+            <p className="text-sm text-content-secondary m-0">{testimonial.handle || testimonial.role}</p>
           </div>
         </div>
-        <div className="testimonial-body">
-          <p>{testimonial.content}</p>
+        
+        <div className="mb-4">
+          <span className="text-yellow-400 text-lg">{"★".repeat(Math.round(testimonial.rating || 0))}</span>
+          <span className="text-gray-200 text-lg">{"★".repeat(5 - Math.round(testimonial.rating || 0))}</span>
         </div>
-        <div className="testimonial-footer">
-          <p className="testimonial-date">{testimonial.date || new Date().toLocaleDateString()}</p>
+
+        <div className="mb-4 text-content-primary leading-relaxed">
+          <p className="m-0">{testimonial.content}</p>
+        </div>
+
+        <div className="flex justify-between items-center text-sm text-content-muted mt-auto pt-4 border-t border-border/50">
+          <p className="m-0">{testimonial.date || new Date().toLocaleDateString()}</p>
         </div>
       </div>
     </div>

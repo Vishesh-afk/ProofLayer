@@ -63,22 +63,43 @@ function App() {
 
 // Separate component for authenticated app layout
 function AppLayout() {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
   return (
-    <div className="flex h-screen w-screen bg-[var(--background-color)] overflow-hidden relative">
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <main className="flex-grow flex flex-col overflow-y-auto h-screen max-md:h-full">
-        <button
-          className="hidden max-md:block absolute top-6 left-6 z-[1100] bg-white border border-gray-200 rounded-lg p-2 cursor-pointer text-2xl text-gray-800"
-          onClick={toggleSidebar}
-        >
-          <FaBars />
-        </button>
+    <div className="flex h-screen w-screen bg-background overflow-hidden relative text-slate-800">
+      <Sidebar 
+        isMobileOpen={isMobileMenuOpen} 
+        isCollapsed={isSidebarCollapsed}
+        toggleMobileMenu={toggleMobileMenu} 
+        toggleCollapse={toggleSidebarCollapse}
+      />
+      <main className="flex-grow flex flex-col overflow-y-auto h-screen bg-background relative w-full transition-all duration-300">
+        
+        {/* Mobile Header to avoid overlapping */}
+        <div className="md:hidden sticky top-0 z-[1000] flex items-center justify-between px-4 py-4 bg-surface border-b border-border shadow-sm">
+          <div className="flex items-center gap-3">
+            <button
+              className="flex items-center justify-center p-2 text-content-secondary hover:text-content-primary hover:bg-background rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+              onClick={toggleMobileMenu}
+              aria-label="Toggle Mobile Menu"
+            >
+              <FaBars className="text-xl" />
+            </button>
+            <div className="font-heading font-bold text-lg text-primary-600 tracking-tight flex items-center gap-2">
+              <span className="text-xl">◆</span> ProofLayer
+            </div>
+          </div>
+        </div>
+
         <Routes>
           {/* Default route */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -125,10 +146,11 @@ function AppLayout() {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
-      {isSidebarOpen && (
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
         <div
-          className="hidden max-md:block fixed inset-0 bg-black/50 z-[1001]"
-          onClick={() => setSidebarOpen(false)}
+          className="md:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1001] transition-opacity duration-300"
+          onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
     </div>

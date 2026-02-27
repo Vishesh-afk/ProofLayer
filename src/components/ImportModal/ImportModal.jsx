@@ -99,49 +99,50 @@ const ImportModal = ({ source, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <button className="close-button" onClick={onClose} disabled={isLoading}>
+    <div className="fixed inset-0 bg-slate-900/60 z-[9999] flex items-center justify-center p-4 animate-fadeIn" onClick={handleOverlayClick}>
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl relative animate-slideUp border border-slate-200 flex flex-col">
+        <button className="absolute top-6 right-6 text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all focus:outline-none focus:ring-2 focus:ring-slate-300 rounded-full p-2" onClick={onClose} disabled={isLoading}>
           <FaTimes />
         </button>
 
-        <form onSubmit={handleSubmit}>
-          <h2 className="modal-title">{source.title} product URL</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col w-full">
+          <h2 className="text-2xl font-bold font-heading text-slate-800 mb-6 pr-8">{source.title} product URL</h2>
 
-          <div className="input-wrapper">
+          <div className="relative mb-2 w-full">
             <input
               type="text"
               value={url}
               onChange={handleUrlChange}
               placeholder={`Enter ${source.title} URL...`}
               disabled={isLoading}
+              className="w-full py-3 pr-11 pl-4 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all placeholder:text-slate-400 shadow-sm disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
             />
-            {isValid && !isLoading && <FaCheckCircle className="valid-icon" />}
+            {isValid && !isLoading && <FaCheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500 text-lg" />}
           </div>
 
-          <p className="example-text">
+          <p className="text-sm text-slate-500 mb-8">
             For example, https://www.g2.com/products/senja
           </p>
 
           {error && (
-            <div className="text-red-500 text-sm mt-2 p-2 bg-red-50 rounded">
-              {error}
+            <div className="text-red-600 text-sm mt-2 mb-4 p-3 bg-red-50 rounded-xl border border-red-100 flex items-center gap-2">
+              <span className="text-lg">⚠</span> {error}
             </div>
           )}
 
           {isLoading && (
-            <div className="text-blue-600 text-sm mt-2 p-2 bg-blue-50 rounded flex items-center gap-2">
-              <FaSpinner className="animate-spin" />
+            <div className="text-indigo-700 text-sm mt-2 mb-4 p-3 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center gap-2 font-medium">
+              <FaSpinner className="animate-spin text-indigo-500" />
               {progress}
             </div>
           )}
 
           <button
             type="submit"
-            className="import-button disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-indigo-600 text-white font-semibold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-indigo-700 hover:shadow-md hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none border-none mt-2"
             disabled={!isValid || isLoading}
           >
-            {isLoading ? 'Importing...' : 'Import testimonials'} <FaArrowDown />
+            {isLoading ? 'Importing...' : 'Import testimonials'} {!isLoading && <FaArrowDown />}
           </button>
         </form>
       </div>

@@ -21,21 +21,23 @@ const MapColumns = () => {
     ? columnNames 
     : ['No columns detected - please upload a valid file'];
 
-  // If no file was uploaded, show a message
   if (columnNames.length === 0 && !location.state) {
     return (
-      <div className="map-columns-page">
-        <header className="map-columns-header">
-          <h1 className="map-columns-title">Upload spreadsheet</h1>
-          <p className="map-columns-subtitle">Upload a CSV, XLS or XLSX file and ProofLayer will import your proof. See a sample CSV file with supported fields.</p>
+      <div className="flex flex-col min-h-[calc(100vh-80px)] bg-background animate-fadeIn">
+        <header className="bg-surface border-b border-border px-8 md:px-12 py-8 shadow-sm w-full">
+          <h1 className="font-heading text-3xl font-bold text-content-primary mb-2 tracking-tight">Upload spreadsheet</h1>
+          <p className="text-sm text-content-secondary font-medium m-0">Upload a CSV, XLS or XLSX file and ProofLayer will import your proof. See a sample CSV file with supported fields.</p>
         </header>
-        <main className="map-columns-main">
-          <div className="map-columns-card">
-            <p style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+        <main className="flex-grow overflow-y-auto px-6 md:px-12 py-10 flex flex-col items-center w-full">
+          <div className="w-full max-w-4xl bg-surface rounded-2xl p-8 border border-border shadow-sm flex flex-col items-center justify-center min-h-[400px]">
+            <p className="text-center text-content-secondary text-lg mb-8 max-w-md">
               No file uploaded. Please go back and upload a spreadsheet file first.
             </p>
-            <div className="map-columns-actions">
-              <button className="cancel-btn" onClick={() => navigate('/upload-spreadsheet')}>
+            <div className="mt-4">
+              <button 
+                className="px-6 py-2.5 bg-transparent border border-border text-content-primary font-medium rounded-xl hover:bg-background hover:border-content-muted transition-colors focus:outline-none focus:ring-4 focus:ring-content-muted" 
+                onClick={() => navigate('/upload-spreadsheet')}
+              >
                 Go to Upload Page
               </button>
             </div>
@@ -172,33 +174,33 @@ const MapColumns = () => {
   };
 
   return (
-    <div className="map-columns-page">
-      <header className="map-columns-header">
-        <h1 className="map-columns-title">Upload spreadsheet</h1>
-        <p className="map-columns-subtitle">Upload a CSV, XLS or XLSX file and ProofLayer will import your proof. See a sample CSV file with supported fields.</p>
+    <div className="flex flex-col min-h-[calc(100vh-80px)] bg-background animate-fadeIn">
+      <header className="bg-surface border-b border-border px-8 md:px-12 py-8 shadow-sm w-full">
+        <h1 className="font-heading text-3xl font-bold text-content-primary mb-2 tracking-tight">Upload spreadsheet</h1>
+        <p className="text-sm text-content-secondary font-medium m-0">Upload a CSV, XLS or XLSX file and ProofLayer will import your proof. See a sample CSV file with supported fields.</p>
       </header>
 
-      <main className="map-columns-main">
-        <div className="map-columns-card">
-          <h2 className="card-title">Map Columns</h2>
+      <main className="flex-grow overflow-y-auto px-6 md:px-12 py-10 flex flex-col items-center w-full">
+        <div className="w-full max-w-4xl bg-surface rounded-2xl p-8 lg:p-10 border border-border shadow-soft">
+          <h2 className="text-xl font-bold text-content-primary mb-6">Map Columns</h2>
           
-          <div className="mapping-table">
-            <div className="mapping-header">
-              <div className="header-cell database-header">Database Fields</div>
-              <div className="header-cell input-header">Input Fields</div>
+          <div className="w-full border border-border rounded-xl overflow-hidden mb-8 shadow-sm">
+            <div className="grid grid-cols-[1fr_2fr] bg-background/50 border-b border-border text-xs font-semibold text-content-secondary uppercase tracking-wider">
+              <div className="p-4 px-6 md:px-8 border-r border-border/50">Database Fields</div>
+              <div className="p-4 px-6 md:px-8">Input Fields</div>
             </div>
 
             {databaseFields.map((dbField) => (
-              <div key={dbField} className="mapping-row">
-                <div className="mapping-cell database-cell">
+              <div key={dbField} className="grid grid-cols-[1fr_2fr] border-b border-border/50 last:border-0 hover:bg-background/30 transition-colors">
+                <div className="p-4 px-6 md:px-8 flex items-center font-medium text-content-primary border-r border-border/50">
                   {dbField}
                 </div>
-                <div className="mapping-cell input-cell">
+                <div className="p-3 px-6 md:px-8 flex items-center">
                   <select
                     // The value is now pre-selected by the smart mapping function
                     value={fieldMappings[dbField] || ''}
                     onChange={(e) => handleMappingChange(dbField, e.target.value)}
-                    className="field-select"
+                    className="w-full bg-surface border border-border text-content-primary rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 hover:border-primary-300 transition-all shadow-sm"
                   >
                     <option value="">Select field</option>
                     {inputFields.map((inputField) => (
@@ -213,31 +215,25 @@ const MapColumns = () => {
           </div>
 
           {uploadError && (
-            <div style={{ 
-              padding: '1rem', 
-              backgroundColor: '#fee2e2', 
-              color: '#dc2626', 
-              borderRadius: '8px', 
-              marginBottom: '1rem' 
-            }}>
+            <div className="p-4 bg-red-50 text-red-600 border border-red-200 rounded-xl mb-6 text-sm font-medium shadow-sm animate-fadeIn">
               {uploadError}
             </div>
           )}
 
-          <div className="map-columns-actions">
+          <div className="flex items-center justify-end gap-4 mt-8 pt-6 border-t border-border">
             <button 
-              className="upload-btn" 
-              onClick={handleUpload}
-              disabled={isUploading}
-            >
-              <BsArrowUp /> {isUploading ? 'Uploading...' : 'Upload'}
-            </button>
-            <button 
-              className="cancel-btn" 
+              className="px-6 py-2.5 bg-transparent border border-border text-content-primary font-medium rounded-xl hover:bg-background hover:border-content-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-content-muted" 
               onClick={handleCancel}
               disabled={isUploading}
             >
               Cancel
+            </button>
+            <button 
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 hover:shadow-float hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none shadow-sm border-none focus:outline-none focus:ring-4 focus:ring-primary-50" 
+              onClick={handleUpload}
+              disabled={isUploading}
+            >
+              <BsArrowUp /> {isUploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
         </div>

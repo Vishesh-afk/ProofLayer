@@ -7,14 +7,14 @@ const Settings = () => {
     const { currentUser, userProfile, userRole } = useAuth();
 
     return (
-        <div className="p-8 max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-2">Account Settings</h1>
-            <p className="text-gray-500 mb-8">View and manage your profile information</p>
+        <div className="p-8 max-w-4xl mx-auto animate-fadeIn">
+            <h1 className="font-heading text-3xl font-bold text-content-primary mb-2 tracking-tight">Account Settings</h1>
+            <p className="text-content-secondary mb-8">View and manage your profile information</p>
 
             {/* Profile Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div className="bg-surface rounded-xl shadow-sm border border-border p-8">
                 <div className="flex items-center gap-8 mb-8">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-4xl text-white font-semibold overflow-hidden">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-4xl text-white font-semibold overflow-hidden shadow-sm">
                         {userProfile?.photoURL ? (
                             <img src={userProfile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
@@ -22,10 +22,10 @@ const Settings = () => {
                         )}
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">{userProfile?.name || userProfile?.displayName}</h2>
-                        <p className="text-gray-500">{userProfile?.designation}</p>
-                        <div className="mt-2">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                        <h2 className="text-2xl font-bold text-content-primary mb-1">{userProfile?.name || userProfile?.displayName}</h2>
+                        <p className="text-content-secondary">{userProfile?.designation}</p>
+                        <div className="mt-3 flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-primary-50 text-primary-700">
                                 <FaShieldAlt size={12} />
                                 {ROLE_LABELS[userRole]}
                             </span>
@@ -39,36 +39,36 @@ const Settings = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-gray-500 mb-2">
-                            <FaUser />
-                            <label className="text-sm font-medium">Full Name</label>
+                    <div className="border border-border rounded-xl p-5 hover:border-primary-200 transition-colors duration-200 bg-background/50">
+                        <div className="flex items-center gap-2 text-content-muted mb-3">
+                            <FaUser className="text-primary-500" />
+                            <label className="text-sm font-medium uppercase tracking-wider text-xs">Full Name</label>
                         </div>
-                        <div className="text-gray-900 font-medium">{userProfile?.name || userProfile?.displayName || 'Not set'}</div>
+                        <div className="text-content-primary font-medium text-lg">{userProfile?.name || userProfile?.displayName || 'Not set'}</div>
                     </div>
 
-                    <div className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-gray-500 mb-2">
-                            <FaEnvelope />
-                            <label className="text-sm font-medium">Email Address</label>
+                    <div className="border border-border rounded-xl p-5 hover:border-primary-200 transition-colors duration-200 bg-background/50">
+                        <div className="flex items-center gap-2 text-content-muted mb-3">
+                            <FaEnvelope className="text-primary-500" />
+                            <label className="text-sm font-medium uppercase tracking-wider text-xs">Email Address</label>
                         </div>
-                        <div className="text-gray-900">{currentUser?.email}</div>
+                        <div className="text-content-primary font-medium text-lg">{currentUser?.email}</div>
                     </div>
 
-                    <div className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-gray-500 mb-2">
-                            <FaBuilding />
-                            <label className="text-sm font-medium">Company</label>
+                    <div className="border border-border rounded-xl p-5 hover:border-primary-200 transition-colors duration-200 bg-background/50">
+                        <div className="flex items-center gap-2 text-content-muted mb-3">
+                            <FaBuilding className="text-primary-500" />
+                            <label className="text-sm font-medium uppercase tracking-wider text-xs">Company</label>
                         </div>
-                        <div className="text-gray-900 font-medium">{userProfile?.company || 'Not set'}</div>
+                        <div className="text-content-primary font-medium text-lg">{userProfile?.company || 'Not set'}</div>
                     </div>
 
-                    <div className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-gray-500 mb-2">
-                            <FaBriefcase />
-                            <label className="text-sm font-medium">Designation</label>
+                    <div className="border border-border rounded-xl p-5 hover:border-primary-200 transition-colors duration-200 bg-background/50">
+                        <div className="flex items-center gap-2 text-content-muted mb-3">
+                            <FaBriefcase className="text-primary-500" />
+                            <label className="text-sm font-medium uppercase tracking-wider text-xs">Designation</label>
                         </div>
-                        <div className="text-gray-900">{userProfile?.designation || 'Not set'}</div>
+                        <div className="text-content-primary font-medium text-lg">{userProfile?.designation || 'Not set'}</div>
                     </div>
                 </div>
 

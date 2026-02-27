@@ -76,7 +76,12 @@ const Onboarding = () => {
                     displayName: formData.name
                 });
 
-                await sendEmailVerification(currentUser);
+                try {
+                    await sendEmailVerification(currentUser);
+                } catch (emailError) {
+                    console.warn('Could not send verification email (rate limited or already sent):', emailError);
+                    // Do not block onboarding if email verification fails
+                }
             }
 
             // Check if company already has users (is this the first user?)
@@ -140,12 +145,17 @@ const Onboarding = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#667eea] to-[#764ba2] p-8 md:p-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-12 md:p-8 w-full max-w-[520px] animate-[slideUp_0.4s_ease-out]">
-                <div className="text-center mb-8">
-                    <div className="text-4xl font-bold text-[var(--primary-color)] mb-4">◆ ProofLayer</div>
-                    <h1 className="text-3xl md:text-2xl font-bold text-[var(--text-primary-color)] mb-2">Welcome! Let's set up your profile</h1>
-                    <p className="text-[var(--text-secondary-color)] text-base">Tell us a bit about yourself to get started</p>
+        <div className="flex flex-col min-h-screen bg-background items-center justify-center p-6 md:p-8 animate-fadeIn">
+            <div className="bg-surface rounded-2xl shadow-soft border border-border p-10 md:p-12 w-full max-w-xl animate-slideUp">
+                <div className="text-center mb-10">
+                    <div className="text-4xl font-heading font-bold text-indigo-600 mb-6 drop-shadow-sm tracking-tight flex items-center justify-center gap-3">
+                        <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-inner">
+                            <span className="text-white text-2xl font-black">P</span>
+                        </div>
+                        ProofLayer
+                    </div>
+                    <h1 className="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-3 tracking-tight">Welcome! Let's set up your profile</h1>
+                    <p className="text-slate-500 text-base font-medium m-0">Tell us a bit about yourself to get started</p>
                 </div>
 
                 {error && (
@@ -157,11 +167,11 @@ const Onboarding = () => {
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="name" className="text-sm font-semibold text-[var(--text-primary-color)]">
-                            Full Name *
+                        <label htmlFor="name" className="text-sm font-semibold tracking-wider uppercase text-slate-500">
+                            Full Name <span className="text-red-500">*</span>
                         </label>
                         <div className="relative flex items-center">
-                            <FaUser className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaUser className="absolute left-4 text-slate-400 text-base pointer-events-none" />
                             <input
                                 type="text"
                                 id="name"
@@ -172,17 +182,17 @@ const Onboarding = () => {
                                 disabled={loading}
                                 autoComplete="name"
                                 autoFocus
-                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 px-4 pl-11 bg-surface border border-slate-200 rounded-xl text-base transition-all duration-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="company" className="text-sm font-semibold text-[var(--text-primary-color)]">
-                            Company *
+                        <label htmlFor="company" className="text-sm font-semibold tracking-wider uppercase text-slate-500">
+                            Company <span className="text-red-500">*</span>
                         </label>
                         <div className="relative flex items-center">
-                            <FaBuilding className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaBuilding className="absolute left-4 text-slate-400 text-base pointer-events-none" />
                             <input
                                 type="text"
                                 id="company"
@@ -192,17 +202,17 @@ const Onboarding = () => {
                                 onChange={handleChange}
                                 disabled={loading}
                                 autoComplete="organization"
-                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 px-4 pl-11 bg-surface border border-slate-200 rounded-xl text-base transition-all duration-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="designation" className="text-sm font-semibold text-[var(--text-primary-color)]">
-                            Designation *
+                        <label htmlFor="designation" className="text-sm font-semibold tracking-wider uppercase text-slate-500">
+                            Designation <span className="text-red-500">*</span>
                         </label>
                         <div className="relative flex items-center">
-                            <FaBriefcase className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaBriefcase className="absolute left-4 text-slate-400 text-base pointer-events-none" />
                             <input
                                 type="text"
                                 id="designation"
@@ -212,62 +222,62 @@ const Onboarding = () => {
                                 onChange={handleChange}
                                 disabled={loading}
                                 autoComplete="organization-title"
-                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 px-4 pl-11 bg-surface border border-slate-200 rounded-xl text-base transition-all duration-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
 
                     {/* Role Selector */}
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="role" className="text-sm font-semibold text-[var(--text-primary-color)]">
-                            Account Role *
+                        <label htmlFor="role" className="text-sm font-semibold tracking-wider uppercase text-slate-500">
+                            Account Role <span className="text-red-500">*</span>
                         </label>
                         <div className="relative flex items-center">
-                            <FaShieldAlt className="absolute left-4 text-[var(--text-secondary-color)] text-base pointer-events-none" />
+                            <FaShieldAlt className="absolute left-4 text-slate-400 text-base pointer-events-none" />
                             <select
                                 id="role"
                                 name="role"
                                 value={formData.role}
                                 onChange={handleChange}
                                 disabled={loading}
-                                className="w-full py-3.5 px-4 pl-11 border-[1.5px] border-[var(--border-color)] rounded-lg text-base transition-all duration-200 bg-white text-[var(--text-primary-color)] focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.1)] disabled:bg-gray-100 disabled:cursor-not-allowed appearance-none cursor-pointer"
+                                className="w-full py-3.5 px-4 pl-11 pr-10 bg-surface border border-slate-200 rounded-xl text-base transition-all duration-200 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed appearance-none cursor-pointer"
                             >
                                 {Object.entries(ROLE_LABELS).map(([value, label]) => (
                                     <option key={value} value={value}>{label}</option>
                                 ))}
                             </select>
                             {/* Custom dropdown arrow */}
-                            <div className="absolute right-4 pointer-events-none text-[var(--text-secondary-color)]">
+                            <div className="absolute right-4 pointer-events-none text-slate-400">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
                         </div>
-                        <small className="text-xs text-[var(--text-secondary-color)] mt-1">
+                        <small className="text-xs text-slate-400 mt-1 font-medium">
                             Select the access level for this account
                         </small>
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-2">
-                        <p className="m-0 my-2 text-sm text-blue-900 flex items-start gap-2">
-                            <span>✉️</span>
-                            <span>A verification email will be sent to <strong className="text-[var(--primary-color)] font-semibold">{email}</strong></span>
+                    <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-5 mt-4">
+                        <p className="m-0 my-2 text-sm text-indigo-900 flex items-start gap-3">
+                            <span className="text-lg">✉️</span>
+                            <span className="font-medium">A verification email will be sent to <strong className="text-indigo-700 font-bold">{email}</strong></span>
                         </p>
-                        <p className="m-0 my-2 text-sm text-blue-900 flex items-start gap-2">
-                            <span>🔐</span>
-                            <span>Your account will be created with <strong>{ROLE_LABELS[formData.role]}</strong> access.</span>
+                        <p className="m-0 my-2 text-sm text-indigo-900 flex items-start gap-3">
+                            <span className="text-lg">🔐</span>
+                            <span className="font-medium">Your account will be created with <strong className="text-indigo-700 font-bold">{ROLE_LABELS[formData.role]}</strong> access.</span>
                         </p>
                     </div>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="bg-[var(--primary-color)] text-white border-none py-4 px-6 rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 mt-2 flex items-center justify-center gap-2 hover:bg-[#5a4bc7] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(108,92,231,0.3)] active:translate-y-0 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        className="w-full bg-indigo-600 text-white border-none py-3.5 px-6 rounded-xl text-base font-semibold cursor-pointer transition-all duration-200 mt-4 flex items-center justify-center gap-2 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-indigo-200"
                     >
                         {loading ? (
                             <>
-                                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                Setting up your account...
+                                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                Setting up...
                             </>
                         ) : (
                             'Complete Setup'

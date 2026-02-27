@@ -23,9 +23,8 @@ service cloud.firestore {
 
     // USERS COLLECTION
     match /users/{userId} {
-      // Users can read their own profile, admins can read all
-      allow read: if request.auth != null &&
-        (request.auth.uid == userId || isAdmin());
+      // Any authenticated user can read profiles (needed to query company users during onboarding)
+      allow read: if request.auth != null;
 
       // Users can create their own profile during signup/onboarding
       // Allow creation if authenticated and creating own profile

@@ -2,10 +2,11 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../constants/roles';
-import { BsList, BsDownload, BsHeart, BsGraphUp, BsLink45Deg, BsBoxArrowRight, BsGear, BsPeople } from 'react-icons/bs';
+import { BsList, BsDownload, BsHeart, BsGraphUp, BsGear, BsPeople } from 'react-icons/bs';
+import { FiMenu, FiLogOut } from 'react-icons/fi';
 import userAvatar from '../../assets/avatar.png';
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isMobileOpen, isCollapsed, toggleMobileMenu, toggleCollapse }) => {
   const { currentUser, userProfile, userRole, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,112 +28,155 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const firstName = (userProfile?.displayName || userProfile?.name || currentUser?.email?.split('@')[0] || 'User').split(' ')[0];
 
-  const navItemBase = 'flex items-center gap-3 px-3 py-3 rounded-lg no-underline font-medium transition-all duration-200 text-gray-700 hover:bg-[#1C1C1E] hover:text-white';
-  const navItemActive = 'bg-[#1C1C1E] text-white';
+  const navItemBase = `flex items-center gap-3 px-3 py-3 rounded-xl no-underline font-medium transition-all duration-200 text-slate-500 hover:bg-indigo-50 hover:text-indigo-700 ${isCollapsed ? 'justify-center' : ''}`;
+  const navItemActive = 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm border-l-4 border-indigo-600';
 
   return (
     <aside
       className={`
-        w-[280px] bg-white flex flex-col justify-between h-screen px-4 py-6 shrink-0
-        sticky top-0 border-r border-gray-200 transition-transform duration-300 ease-in-out z-[1002]
-        max-md:fixed max-md:left-0 max-md:top-0 max-md:h-full max-md:shadow-xl
-        ${isOpen ? 'max-md:translate-x-0' : 'max-md:-translate-x-full'}
+        ${isCollapsed ? 'w-[88px]' : 'w-[280px]'} 
+        bg-surface flex flex-col justify-between h-screen py-6 shrink-0
+        sticky top-0 border-r border-border transition-all duration-300 ease-in-out z-[1002]
+        max-md:fixed max-md:left-0 max-md:top-0 max-md:h-full max-md:shadow-xl max-md:w-[280px]
+        ${isMobileOpen ? 'max-md:translate-x-0' : 'max-md:-translate-x-full'}
       `}
     >
       {/* Top Section */}
-      <div className="flex flex-col flex-1 overflow-y-auto min-h-0">
-        {/* Header: Logo + Profile (Right) */}
-        <div className="flex items-center justify-between mb-8 px-2">
+      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden min-h-0 px-4">
+        {/* Header: Logo + Toggle */}
+        <div className={`flex items-center mb-8 px-2 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
           {/* Logo */}
-          <div className="flex items-center text-black font-medium text-xl font-[Lato]">
-            ◆ ProofLayer
-          </div>
+          {!isCollapsed && (
+            <div className="flex items-center text-slate-800 font-bold text-xl font-heading tracking-tight gap-2">
+              <span className="text-primary-600 text-2xl">◆</span> ProofLayer
+            </div>
+          )}
+          {isCollapsed && (
+             <div className="flex items-center justify-center text-primary-600 text-2xl font-bold">
+              ◆
+            </div>
+          )}
 
-          {/* Profile: Avatar + Name below */}
-          <div className="flex flex-col items-center gap-1">
-            <img
-              src={userProfile?.photoURL || userAvatar}
-              alt={firstName}
-              className="w-8 h-8 rounded-full object-cover ring-1 ring-gray-100"
-            />
-            <span className="text-[10px] text-gray-500 font-medium leading-none">
-              {firstName}
-            </span>
-          </div>
+          {/* Desktop Toggle Button */}
+          <button 
+            onClick={toggleCollapse}
+            className="hidden md:flex p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            <FiMenu className="text-xl" />
+          </button>
+        </div>
+
+        {/* Profile (condensed if collapsed) */}
+        <div className={`flex items-center mb-8 px-2 gap-3 ${isCollapsed ? 'justify-center' : ''}`}>
+           <img
+             src={userProfile?.photoURL || userAvatar}
+             alt={firstName}
+             className="w-10 h-10 rounded-full object-cover ring-2 ring-primary-100 shadow-sm"
+           />
+           {!isCollapsed && (
+             <div className="flex flex-col">
+               <span className="text-sm text-slate-800 font-bold leading-tight">
+                 {firstName}
+               </span>
+               <span className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">
+                 {userRole}
+               </span>
+             </div>
+           )}
         </div>
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1 flex-1">
           {/* COLLECT */}
-          <div className="mb-5">
-            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2 px-3">
-              COLLECT
-            </p>
+          <div className="mb-6">
+            {!isCollapsed && (
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2 px-3">
+                Collect
+              </p>
+            )}
             <Link
               to="/new-proof"
               className={`${navItemBase} ${isActive('/new-proof') ? navItemActive : ''}`}
-              onClick={toggleSidebar}
+              onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
+              title="New Proof"
             >
-              <BsList size={18} /> <span>New Proof</span>
+              <BsList size={20} className={isActive('/new-proof') ? 'text-indigo-600' : ''} /> 
+              {!isCollapsed && <span>New Proof</span>}
             </Link>
             {canImport && (
               <Link
                 to="/import"
                 className={`${navItemBase} ${isActive('/import') ? navItemActive : ''}`}
-                onClick={toggleSidebar}
+                onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
+                title="Import"
               >
-                <BsDownload size={18} /> <span>Import</span>
+                <BsDownload size={20} className={isActive('/import') ? 'text-indigo-600' : ''} /> 
+                {!isCollapsed && <span>Import</span>}
               </Link>
             )}
           </div>
 
           {/* MANAGE */}
-          <div className="mb-5">
-            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2 px-3">
-              MANAGE
-            </p>
+          <div className="mb-6">
+            {!isCollapsed && (
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2 px-3">
+                Manage
+              </p>
+            )}
             <Link
               to="/dashboard"
               className={`${navItemBase} ${isActive('/dashboard') ? navItemActive : ''}`}
-              onClick={toggleSidebar}
+              onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
+              title="Dashboard"
             >
-              <BsHeart size={18} /> <span>Dashboard</span>
+              <BsHeart size={20} className={isActive('/dashboard') ? 'text-indigo-600' : ''} /> 
+              {!isCollapsed && <span>Your Proofs</span>}
             </Link>
             {canManageUsers && (
               <Link
                 to="/manage-users"
                 className={`${navItemBase} ${isActive('/manage-users') ? navItemActive : ''}`}
-                onClick={toggleSidebar}
+                onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
+                title="Manage Users"
               >
-                <BsPeople size={18} /> <span>Manage Users</span>
+                <BsPeople size={20} className={isActive('/manage-users') ? 'text-indigo-600' : ''} /> 
+                {!isCollapsed && <span>Users</span>}
               </Link>
             )}
           </div>
 
           {/* SHARE */}
-          <div className="mb-5">
-            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2 px-3">
-              SHARE
-            </p>
+          <div className="mb-6">
+            {!isCollapsed && (
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2 px-3">
+                Share
+              </p>
+            )}
             <Link
               to="#"
               className={`${navItemBase} ${isActive('/distribute') ? navItemActive : ''}`}
+              title="Distribute"
             >
-              <BsGraphUp size={18} /> <span>Distribute</span>
+              <BsGraphUp size={20} className={isActive('/distribute') ? 'text-indigo-600' : ''} /> 
+              {!isCollapsed && <span>Distribute</span>}
             </Link>
           </div>
 
           {/* ACCOUNT */}
           {canAccessSettings && (
-            <div className="mb-5">
-              <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2 px-3">
-                ACCOUNT
-              </p>
+            <div className="mb-6 mt-auto">
+              {!isCollapsed && (
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2 px-3">
+                  Account
+                </p>
+              )}
               <Link
                 to="/settings"
                 className={`${navItemBase} ${isActive('/settings') ? navItemActive : ''}`}
+                title="Settings"
               >
-                <BsGear size={18} /> <span>Settings</span>
+                <BsGear size={20} className={isActive('/settings') ? 'text-indigo-600' : ''} /> 
+                {!isCollapsed && <span>Settings</span>}
               </Link>
             </div>
           )}
@@ -140,13 +184,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </div>
 
       {/* Footer: Logout Only */}
-      <div className="pt-4 mt-2 border-t border-gray-100">
+      <div className={`pt-4 mt-2 border-t border-border px-4 ${isCollapsed ? 'flex justify-center' : ''}`}>
         <button
-          className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-lg text-sm font-medium transition-all duration-200"
+          className={`flex items-center justify-center gap-2 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-sm font-semibold transition-all duration-200 ${isCollapsed ? 'w-10 h-10 p-0 rounded-full' : 'w-full px-4'}`}
           onClick={handleLogout}
+          title="Sign Out"
         >
-          <BsBoxArrowRight className="text-lg" />
-          <span>Sign Out</span>
+          <FiLogOut className="text-lg" />
+          {!isCollapsed && <span>Sign Out</span>}
         </button>
       </div>
     </aside>

@@ -1,13 +1,13 @@
 /* src/App.css */
 
-
 .app-layout {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: var(--bg-light);
+  background-color: var(--background-color);
   overflow: hidden;
-  position: relative; /* Needed for positioning the toggle button */
+  position: relative;
+  /* Needed for positioning the toggle button */
 }
 
 .main-view {
@@ -16,6 +16,9 @@
   flex-direction: column;
   overflow-y: auto;
   height: 100vh;
+  /* Smooth scrolling for a better feel */
+  scroll-behavior: smooth;
+  @apply bg-background;
 }
 
 /* Hide the toggle button on larger screens */
@@ -24,31 +27,29 @@
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  z-index: 1100; /* Ensure it's above other content but below the sidebar */
-  background: #fff;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 0.5rem;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--text-dark);
+  z-index: 1100;
+  /* Ensure it's above other content but below the sidebar */
+  @apply bg-surface border border-border rounded-lg p-2 cursor-pointer text-xl text-content-primary shadow-sm hover:shadow-soft transition-all duration-200;
 }
 
 .sidebar-overlay {
-  display: none; /* Hidden by default */
+  display: none;
+  /* Hidden by default */
 }
-
 
 /* --- Mobile Styles --- */
 @media (max-width: 768px) {
   .main-view {
-    overflow-y: auto; /* Ensure the main view scrolls on mobile */
+    overflow-y: auto;
+    /* Ensure the main view scrolls on mobile */
     height: 100%;
   }
 
   .sidebar {
-    transition: transform 0.3s ease-in-out; /* Smooth transition for sidebar */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth premium transition */
   }
+
   .app-layout {
     /* The layout remains flex, but the sidebar will be positioned absolutely */
   }
@@ -57,7 +58,7 @@
   .sidebar-toggle-button {
     display: block;
   }
-  
+
   /* The overlay is used to create a backdrop and close the menu on click */
   .sidebar-overlay {
     display: block;
@@ -66,12 +67,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1001; /* Below sidebar, above content */
+    background-color: rgba(15, 23, 42, 0.4);
+    /* Slate 900 with opacity */
+    backdrop-filter: blur(2px);
+    z-index: 1001;
+    /* Below sidebar, above content */
+    animation: fadeIn 0.3s ease-out forwards;
   }
 
   .app-layout.sidebar-open .main-view {
-    filter: blur(4px) brightness(0.7);
+    filter: blur(4px) brightness(0.9);
     pointer-events: none;
+    transition: filter 0.3s ease-out;
   }
 }

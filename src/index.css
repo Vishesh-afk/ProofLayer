@@ -1,13 +1,19 @@
 @import "tailwindcss";
 
+/* 
+  We import the config in v4 to ensure backward compatibility with tailwind.config.js 
+  Wait, to be safe, v4 automatically picks up the config or we use theme variables.
+*/
+@source "./src";
+
 @layer base {
   :root {
-    --primary-color: #6C5CE7;
-    --background-color: #F5F5F5;
-    --card-bg-color: #FFFFFF;
-    --text-primary-color: #000000;
-    --text-secondary-color: #8A8A8A;
-    --border-color: #E0E0E0;
+    --primary-color: #4f46e5;
+    --background-color: #f8fafc;
+    --card-bg-color: #ffffff;
+    --text-primary-color: #0f172a;
+    --text-secondary-color: #475569;
+    --border-color: #e2e8f0;
   }
 
   html {
@@ -22,11 +28,28 @@
 
   body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-primary-color);
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: inherit;
+    /* will use from tailwind defaults or set in html */
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Just basic selection to match primary config */
+  ::selection {
+    background-color: #e0e7ff;
+    color: #4338ca;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -0.025em;
+    color: #0f172a;
   }
 
   * {
@@ -35,16 +58,31 @@
 }
 
 @layer components {
+
   /* Global Loading Styles */
   .loading-container {
-    @apply flex flex-col items-center justify-center min-h-screen gap-4 bg-[var(--background-color)];
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 1rem;
+    background-color: #f8fafc;
   }
 
   .spinner {
-    @apply w-12 h-12 border-4 border-purple-200 border-t-[var(--primary-color)] rounded-full animate-spin;
+    width: 3rem;
+    height: 3rem;
+    border: 4px solid #e0e7ff;
+    border-top-color: #4f46e5;
+    border-radius: 9999px;
+    animation: spin 1s linear infinite;
   }
 
   .loading-container p {
-    @apply text-[var(--text-secondary-color)] text-base m-0;
+    color: #475569;
+    font-size: 1rem;
+    margin: 0;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
