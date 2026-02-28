@@ -153,7 +153,7 @@ const Sidebar = ({ isMobileOpen, isCollapsed, toggleMobileMenu, toggleCollapse }
               </p>
             )}
             <Link
-              to="#"
+              to="/distribute"
               className={`${navItemBase} ${isActive('/distribute') ? navItemActive : ''}`}
               title="Distribute"
             >

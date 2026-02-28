@@ -3,8 +3,16 @@ import './ImportSuccessModal.css';
 import { FaCheckCircle } from 'react-icons/fa';
 import { BsArrowRight } from 'react-icons/bs';
 
+import { useNavigate } from 'react-router-dom';
+
 const ImportSuccessModal = ({ count, source, onClose, isOpen }) => {
+  const navigate = useNavigate();
   if (!isOpen) return null;
+
+  const handleDistribute = () => {
+    onClose();
+    navigate('/distribute');
+  };
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">

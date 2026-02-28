@@ -40,9 +40,16 @@ const TestimonialCard = ({ testimonial, onSelect, isSelected }) => {
               {testimonial.author?.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="flex-grow">
-            <p className="font-semibold text-content-primary m-0">{testimonial.author}</p>
-            <p className="text-sm text-content-secondary m-0">{testimonial.handle || testimonial.role}</p>
+          <div className="testimonial-author">
+            <p className="testimonial-author-name">{testimonial.author}</p>
+            <p className="testimonial-author-handle">{testimonial.handle || testimonial.role}</p>
+          </div>
+          <div className="testimonial-rating">
+            <span style={{ color: '#FFB800' }}>{"★".repeat(Math.round(testimonial.rating || 0))}</span>
+            <span style={{ color: '#E0E0E0' }}>{"★".repeat(5 - Math.round(testimonial.rating || 0))}</span>
+            {testimonial.isDistributed && (
+              <span className="shared-badge">Shared</span>
+            )}
           </div>
         </div>
         
