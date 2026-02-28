@@ -40,12 +40,16 @@ const TestimonialCard = ({ testimonial, onSelect, isSelected }) => {
               {testimonial.author?.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="flex-grow">
-            <p className="font-semibold text-content-primary m-0">{testimonial.author}</p>
-            <p className="text-sm text-content-secondary m-0">{testimonial.handle || testimonial.role}</p>
+          <div className="flex-grow flex items-center justify-between">
+            <div>
+              <p className="font-semibold text-content-primary m-0">{testimonial.author}</p>
+              <p className="text-sm text-content-secondary m-0">{testimonial.handle || testimonial.role}</p>
+            </div>
+            {testimonial.isDistributed && (
+              <span className="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full border border-indigo-200 uppercase tracking-wider">Shared</span>
+            )}
           </div>
         </div>
-        
         <div className="mb-4">
           <span className="text-yellow-400 text-lg">{"★".repeat(Math.round(testimonial.rating || 0))}</span>
           <span className="text-gray-200 text-lg">{"★".repeat(5 - Math.round(testimonial.rating || 0))}</span>

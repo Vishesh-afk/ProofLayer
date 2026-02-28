@@ -1,5 +1,5 @@
 
-const SCRAPEDO_TOKEN = "40ed158f960244e1955bf94c8f9ce6a27ceb2b8cd3f"; // Ideally move to .env
+const SCRAPEDO_TOKEN = "550e4ddb55b94844a55810dfb2717d4e1d6a5865a95";
 const SCRAPEDO_ENDPOINT = "https://api.scrape.do";
 const MAX_PAGES = 2;
 
@@ -46,63 +46,82 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
     // The python script appended "?survey_responses_page={page}"
     // We need to support base URLs that might or might not have query params.
     
-    // Construct base paging URL. 
-    // If user pastes "https://www.g2.com/products/xyz/reviews", we append "?survey_responses_page="
-    
-    // Simple check: does it have ?
+    // Strictly follow Python script pagination: BASE_URL + page
+    // The Python script used "?survey_responses_page=" 
+    // 1. Determine paging parameter (Product pages use ?page, Sellers use ?survey_responses_page)
     const separator = baseUrl.includes('?') ? '&' : '?';
-    const pagingBase = `${baseUrl}${separator}survey_responses_page=`;
+    let pagingParam = 'page'; // default for products
+    if (baseUrl.includes('/sellers/') || baseUrl.includes('survey_responses_page')) {
+        pagingParam = 'survey_responses_page';
+    }
+    const pagingBase = `${baseUrl}${separator}${pagingParam}=`;
 
     for (let page = 1; page <= MAX_PAGES; page++) {
         const pageUrl = `${pagingBase}${page}`;
         
-        if (onProgress) onProgress(`Scraping page ${page} of ${MAX_PAGES}...`);
+        if (onProgress) onProgress(`Scraping G2 page ${page} of ${MAX_PAGES}...`);
         
         try {
             const html = await fetchWithScrapeDo(pageUrl);
-            
-            // Parse HTML
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
             
-            // Select review blocks (matching Python logic: #reviews-result .elv-border)
-            // Note: In browser DOM, we might need slightly different selectors if structure is complex, 
-            // but standard CSS selectors work.
-            const reviewBlocks = doc.querySelectorAll("#reviews-result .elv-border"); // This might match too many generic borders? 
-            // Python used: soup.select("#reviews-result .elv-border")
+            // 2. Try multiple container selectors
+            // Selector A: Seller pages (from your Python script)
+            let reviewBlocks = Array.from(doc.querySelectorAll("#reviews-result .elv-border"));
+            
+            // Selector B: Product pages (itemprop is the standard now)
+            if (reviewBlocks.length === 0) {
+                reviewBlocks = Array.from(doc.querySelectorAll("div[itemprop='review']"));
+            }
+
+            // Selector C: Modern Product cards
+            if (reviewBlocks.length === 0) {
+                reviewBlocks = Array.from(doc.querySelectorAll(".paper.paper--white.paper--wheel"));
+            }
             
             if (reviewBlocks.length === 0) {
-                console.warn(`No reviews found on page ${page}. Stopping.`);
+                console.warn(`No G2 reviews found on page ${page}. URL: ${pageUrl}`);
                 break; 
             }
 
             reviewBlocks.forEach(block => {
-                const nameTag = block.querySelector("h5.elv-font-semibold");
-                const titleTag = block.querySelector("h4 a");
-                const descTag = block.querySelector("div.elv-my-4"); // Review body
-                const ratingTag = block.querySelector("div.stars");
-                // Date tag selector from Python: "div.elv-flex.elv-justify-between > span"
-                // This is very specific. Let's try to match it.
-                // In JS querySelector, direct child > works.
-                // Try to find avatar image
+                // Try Seller-page selectors (Python)
+                let nameTag = block.querySelector("h5.elv-font-semibold");
+                let titleTag = block.querySelector("h4 a");
+                let descTag = block.querySelector("div.elv-my-4");
+                let ratingTag = block.querySelector("div.stars");
+                let dateTag = block.querySelector("div.elv-flex.elv-justify-between > span");
+
+                // If not found, try Product-page selectors (itemprop)
+                if (!nameTag) nameTag = block.querySelector("[itemprop='author']") || block.querySelector(".customer-info__author-name");
+                if (!titleTag) titleTag = block.querySelector("[itemprop='name']") || block.querySelector(".review-list-item__title");
+                if (!descTag) descTag = block.querySelector("[itemprop='reviewBody']") || block.querySelector(".review-list-item__body") || block.querySelector(".formatted-text");
+                if (!dateTag) dateTag = block.querySelector("[itemprop='datePublished']") || block.querySelector(".review-list-item__date");
+                if (!ratingTag) ratingTag = block.querySelector("[itemprop='reviewRating'] meta[itemprop='ratingValue']");
+
+                const name = nameTag ? nameTag.textContent.trim() : "G2 User";
+                const title = titleTag ? titleTag.textContent.trim() : "";
+                const description = descTag ? descTag.textContent.trim() : "";
+                let date = dateTag ? (dateTag.getAttribute('datetime') || dateTag.textContent.trim()) : new Date().toISOString();
+                
+                let rating = 0;
+                if (ratingTag) {
+                    if (ratingTag.tagName === 'META') {
+                        rating = parseFloat(ratingTag.getAttribute('content'));
+                    } else {
+                        rating = convertRating(ratingTag.className);
+                    }
+                }
+
+                // Avatar extraction (extra benefit for JS version)
                 const imgTag = block.querySelector("img"); 
                 let avatarUrl = "";
                 if (imgTag) {
-                     // Prioritize data-src (lazy load)
                      const possibleUrl = imgTag.getAttribute('data-src') || imgTag.getAttribute('src');
                      if (possibleUrl && !possibleUrl.includes('spacer')) {
                          avatarUrl = possibleUrl;
                      }
-                }
-
-                const name = nameTag ? nameTag.textContent.trim() : "Anonymous";
-                const title = titleTag ? titleTag.textContent.trim() : "";
-                const description = descTag ? descTag.textContent.trim() : "";
-                const date = dateTag ? dateTag.textContent.trim() : new Date().toISOString();
-                
-                let rating = 0;
-                if (ratingTag) {
-                    rating = convertRating(ratingTag.className);
                 }
 
                 if (name || title || description) {
@@ -113,7 +132,7 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
                         rating: rating,
                         source: 'G2',
                         date: date,
-                        avatar: avatarUrl, // Use extracted avatar
+                        avatar: avatarUrl,
                         importedAt: new Date().toISOString()
                     });
                 }
@@ -121,10 +140,10 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
 
         } catch (error) {
             console.error(`Error scraping page ${page}:`, error);
-            // Don't break completely, try next page? Or stop? 
-            // Usually if one fails, network might be down.
         }
     }
 
     return allReviews;
 };
+
+export default scrapeG2Reviews;

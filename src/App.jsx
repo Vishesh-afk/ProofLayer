@@ -25,6 +25,7 @@ import Settings from './pages/Settings/Settings';
 import ManageUsers from './pages/ManageUsers/ManageUsers';
 import Projects from './pages/Projects/Projects';
 import ProjectDashboard from './pages/ProjectDashboard/ProjectDashboard';
+import Distribute from './pages/Distribute/Distribute';
 
 
 
@@ -147,6 +148,9 @@ function AppLayout() {
               <ManageUsers />
             </AdminRoute>
           } />
+
+          {/* Distribute - All authenticated users */}
+          <Route path="/distribute" element={<Distribute />} />
 
           {/* Settings - All authenticated users (Admin section handled inside) */}
           <Route path="/settings" element={<Settings />} />

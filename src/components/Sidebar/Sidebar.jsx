@@ -171,8 +171,9 @@ const Sidebar = ({ isMobileOpen, isCollapsed, toggleMobileMenu, toggleCollapse }
               </p>
             )}
             <Link
-              to="#"
+              to="/distribute"
               className={`${navItemBase} ${isActive('/distribute') ? navItemActive : ''}`}
+              onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
               title="Distribute"
             >
               <BsGraphUp size={20} className={isActive('/distribute') ? 'text-indigo-600' : ''} /> 
