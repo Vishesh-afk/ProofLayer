@@ -195,6 +195,17 @@
   border-color: #c0392b;
 }
 
+.toolbar-btn.share-btn {
+  background: #f0f7ff;
+  border-color: #3498db;
+  color: #2980b9;
+}
+
+.toolbar-btn.share-btn:hover {
+  background: #e1effe;
+  border-color: #2980b9;
+}
+
 .proof-list {
   display: flex;
   flex-direction: column;

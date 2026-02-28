@@ -23,6 +23,7 @@ import ManualImport from './pages/ManualImport/ManualImport';
 import MapColumns from './pages/MapColumns/MapColumns';
 import Settings from './pages/Settings/Settings';
 import ManageUsers from './pages/ManageUsers/ManageUsers';
+import Distribute from './pages/Distribute/Distribute';
 
 
 
@@ -120,6 +121,9 @@ function AppLayout() {
               <ManageUsers />
             </AdminRoute>
           } />
+
+          {/* Distribute - All authenticated users */}
+          <Route path="/distribute" element={<Distribute />} />
 
           {/* Settings - All authenticated users (Admin section handled inside) */}
           <Route path="/settings" element={<Settings />} />

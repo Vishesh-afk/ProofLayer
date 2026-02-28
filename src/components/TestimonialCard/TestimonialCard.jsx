@@ -59,6 +59,9 @@ const TestimonialCard = ({ testimonial, onSelect, isSelected }) => {
           <div className="testimonial-rating">
             <span style={{ color: '#FFB800' }}>{"★".repeat(Math.round(testimonial.rating || 0))}</span>
             <span style={{ color: '#E0E0E0' }}>{"★".repeat(5 - Math.round(testimonial.rating || 0))}</span>
+            {testimonial.isDistributed && (
+              <span className="shared-badge">Shared</span>
+            )}
           </div>
         </div>
         <div className="testimonial-body">

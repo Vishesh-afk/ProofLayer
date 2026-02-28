@@ -8,6 +8,8 @@ import ImportSuccessModal from "../../components/ImportSuccessModal/ImportSucces
 import { useAuth } from "../../contexts/AuthContext";
 import { FaSpinner } from 'react-icons/fa';
 
+import { fetchedReviews } from "../../data/fetchedReviews";
+
 const Import = () => {
   const [scrapedTestimonials, setScrapedTestimonials] = useState([]);
   const [selectedTestimonials, setSelectedTestimonials] = useState([]);
@@ -25,19 +27,35 @@ const Import = () => {
   const fetchScrapedTestimonials = async () => {
     try {
       setLoading(true);
-      // Fetch from "imported" collection (Staging)
-      const q = query(
-        collection(db, 'imported')
-        // Add company filter if needed: where('companyId', '==', userProfile?.company)
-      );
+      let allData = [];
 
-      const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      // 1. Fetch from Firebase (Staging)
+      try {
+        const q = query(
+          collection(db, 'imported')
+        );
+        const querySnapshot = await getDocs(q);
+        const fbData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        allData = [...fbData];
+      } catch (fbError) {
+        console.warn("Firebase fetch failed, falling back to local:", fbError);
+      }
 
-      setScrapedTestimonials(data);
+      // 2. Fetch from LocalStorage
+      const localData = JSON.parse(localStorage.getItem('temp_scraped_reviews') || '[]');
+
+      // 3. Add Mock Data if nothing else exists (for demo)
+      if (allData.length === 0 && localData.length === 0) {
+        allData = [...fetchedReviews];
+      } else {
+        // Merge them, avoiding duplicates if possible (simple merge for now)
+        allData = [...allData, ...localData];
+      }
+
+      setScrapedTestimonials(allData);
     } catch (error) {
       console.error("Error fetching imported testimonials:", error);
     } finally {
@@ -68,9 +86,12 @@ const Import = () => {
 
       // Get the full data objects for selected IDs
       const toImport = scrapedTestimonials.filter(t => selectedTestimonials.includes(t.id));
+      const firebaseIdsToDelete = [];
+      const localIdsToRemove = [];
 
       toImport.forEach(item => {
         // 1. Create new doc in 'testimonials' (Live)
+        // Note: Even if we got the review from local, we try to save to Firebase 'testimonials'
         const newRef = doc(collection(db, 'testimonials'));
         const { id, ...data } = item; // Remove the old ID
 
@@ -80,18 +101,36 @@ const Import = () => {
           approvedAt: new Date().toISOString()
         });
 
-        // 2. Delete from 'imported' (Staging)
+        // 2. Track where to delete from
+        if (id.toString().startsWith('local-')) {
+          localIdsToRemove.push(id);
+        } else if (id.toString().startsWith('mock-')) {
+          // Mock data doesn't need to be deleted from anywhere persistent
+        } else {
+          firebaseIdsToDelete.push(id);
+        }
+      });
+
+      // Commit Firebase batch (creates new testimonials and deletes from 'imported')
+      firebaseIdsToDelete.forEach(id => {
         const oldRef = doc(db, 'imported', id);
         batch.delete(oldRef);
       });
 
       await batch.commit();
 
+      // Clean up localStorage
+      if (localIdsToRemove.length > 0) {
+        const currentLocal = JSON.parse(localStorage.getItem('temp_scraped_reviews') || '[]');
+        const updatedLocal = currentLocal.filter(t => !localIdsToRemove.includes(t.id));
+        localStorage.setItem('temp_scraped_reviews', JSON.stringify(updatedLocal));
+      }
+
       setIsModalOpen(true);
-      // Wait for modal to close (or auto close)
+      fetchScrapedTestimonials(); // Refresh list
     } catch (error) {
       console.error("Error approving testimonials:", error);
-      alert("Failed to import selected testimonials.");
+      alert("Failed to import selected testimonials to live database. " + error.message);
     } finally {
       setImporting(false);
     }

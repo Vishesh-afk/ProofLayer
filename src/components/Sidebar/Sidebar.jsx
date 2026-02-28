@@ -115,8 +115,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               SHARE
             </p>
             <Link
-              to="#"
+              to="/distribute"
               className={`${navItemBase} ${isActive('/distribute') ? navItemActive : ''}`}
+              onClick={toggleSidebar}
             >
               <BsGraphUp size={18} /> <span>Distribute</span>
             </Link>
