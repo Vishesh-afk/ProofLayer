@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../constants/roles';
-import { BsList, BsDownload, BsHeart, BsGraphUp, BsGear, BsPeople } from 'react-icons/bs';
+import { BsFolder2, BsPlusSquare, BsDownload, BsHeart, BsGraphUp, BsGear, BsPeople } from 'react-icons/bs';
 import { FiMenu, FiLogOut } from 'react-icons/fi';
 import userAvatar from '../../assets/avatar.png';
 
@@ -22,9 +22,9 @@ const Sidebar = ({ isMobileOpen, isCollapsed, toggleMobileMenu, toggleCollapse }
 
   const isActive = (path) => location.pathname === path;
 
-  const canImport = hasPermission(userRole, 'canImportTestimonials');
-  const canAccessSettings = hasPermission(userRole, 'canAccessSettings');
-  const canManageUsers = hasPermission(userRole, 'canManageUsers');
+  const canImport = hasPermission(userRole, 'canImportTestimonials') || userRole === 'admin';
+  const canAccessSettings = hasPermission(userRole, 'canAccessSettings') || userRole === 'admin';
+  const canManageUsers = hasPermission(userRole, 'canManageUsers') || userRole === 'admin';
 
   const firstName = (userProfile?.displayName || userProfile?.name || currentUser?.email?.split('@')[0] || 'User').split(' ')[0];
 
@@ -87,6 +87,24 @@ const Sidebar = ({ isMobileOpen, isCollapsed, toggleMobileMenu, toggleCollapse }
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1 flex-1">
+          {/* WORKSPACE */}
+          <div className="mb-6">
+            {!isCollapsed && (
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2 px-3">
+                Workspace
+              </p>
+            )}
+            <Link
+              to="/projects"
+              className={`${navItemBase} ${isActive('/projects') || location.pathname.startsWith('/projects/') ? navItemActive : ''}`}
+              onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
+              title="Projects"
+            >
+              <BsFolder2 size={20} className={isActive('/projects') || location.pathname.startsWith('/projects/') ? 'text-indigo-600' : ''} /> 
+              {!isCollapsed && <span>Projects</span>}
+            </Link>
+          </div>
+
           {/* COLLECT */}
           <div className="mb-6">
             {!isCollapsed && (
@@ -100,7 +118,7 @@ const Sidebar = ({ isMobileOpen, isCollapsed, toggleMobileMenu, toggleCollapse }
               onClick={() => { if(isMobileOpen) toggleMobileMenu(); }}
               title="New Proof"
             >
-              <BsList size={20} className={isActive('/new-proof') ? 'text-indigo-600' : ''} /> 
+              <BsPlusSquare size={20} className={isActive('/new-proof') ? 'text-indigo-600' : ''} /> 
               {!isCollapsed && <span>New Proof</span>}
             </Link>
             {canImport && (

@@ -11,7 +11,7 @@ const ManageUsers = () => {
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(null);
 
-    const isAdmin = userRole === USER_ROLES.ADMIN && userProfile?.isApproved;
+    const isAdmin = userRole === USER_ROLES.ADMIN;
 
     useEffect(() => {
         if (userProfile?.company) {

@@ -58,7 +58,7 @@ export const RoleProtectedRoute = ({ children, allowedRoles = [] }) => {
 
     // Require approval for privileged access
     if (allowedRoles.length > 0) {
-        if (!userProfile.isApproved) {
+        if (userRole !== USER_ROLES.ADMIN && userProfile.isApproved === false) {
             return <Navigate to="/unauthorized" replace />;
         }
         if (!allowedRoles.includes(userRole)) {

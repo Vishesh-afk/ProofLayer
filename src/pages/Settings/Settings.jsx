@@ -29,7 +29,7 @@ const Settings = () => {
                                 <FaShieldAlt size={12} />
                                 {ROLE_LABELS[userRole]}
                             </span>
-                            {userProfile?.isApproved && (
+                            {userProfile?.isApproved !== false && (
                                 <span className="ml-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
                                     ✓ Approved
                                 </span>
@@ -72,7 +72,7 @@ const Settings = () => {
                     </div>
                 </div>
 
-                {!userProfile?.isApproved && (
+                {userProfile?.isApproved === false && (
                     <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <h3 className="text-sm font-semibold text-yellow-800 mb-1">Pending Approval</h3>
                         <p className="text-sm text-yellow-700">

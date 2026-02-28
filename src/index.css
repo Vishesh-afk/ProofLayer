@@ -4,7 +4,8 @@
   We import the config in v4 to ensure backward compatibility with tailwind.config.js 
   Wait, to be safe, v4 automatically picks up the config or we use theme variables.
 */
-@source "./src";
+@config "../tailwind.config.js";
+@source "./";
 
 @layer base {
   :root {
