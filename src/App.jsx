@@ -23,8 +23,8 @@ import ManualImport from './pages/ManualImport/ManualImport';
 import MapColumns from './pages/MapColumns/MapColumns';
 import Settings from './pages/Settings/Settings';
 import ManageUsers from './pages/ManageUsers/ManageUsers';
-
-
+import Projects from './pages/Projects/Projects';
+import ProjectDashboard from './pages/ProjectDashboard/ProjectDashboard';
 
 function App() {
   return (
@@ -103,6 +103,10 @@ function AppLayout() {
         <Routes>
           {/* Default route */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+          {/* Projects - All authenticated users */}
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDashboard />} />
 
           {/* Dashboard - All authenticated users */}
           <Route path="/dashboard" element={<Dashboard />} />

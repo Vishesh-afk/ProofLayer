@@ -55,5 +55,17 @@ service cloud.firestore {
       // Only privileged users and admins can update/delete testimonials
       allow update, delete: if request.auth != null && isPrivilegedOrAdmin();
     }
+
+    // PROJECTS COLLECTION
+    match /projects/{projectId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isPrivilegedOrAdmin();
+    }
+
+    // ASSETS COLLECTION
+    match /assets/{assetId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isPrivilegedOrAdmin();
+    }
   }
 }
