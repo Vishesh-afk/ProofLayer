@@ -120,26 +120,26 @@ function AppLayout() {
           {/* Review Details - All authenticated users */}
           <Route path="/review/:id" element={<ReviewDetails />} />
 
-          {/* Import Routes - Privileged users and admins only */}
+          {/* Import Routes - All authenticated users */}
           <Route path="/import" element={
-            <PrivilegedRoute>
+            <ProtectedRoute>
               <Import />
-            </PrivilegedRoute>
+            </ProtectedRoute>
           } />
           <Route path="/upload-spreadsheet" element={
-            <PrivilegedRoute>
+            <ProtectedRoute>
               <UploadSpreadsheet />
-            </PrivilegedRoute>
+            </ProtectedRoute>
           } />
           <Route path="/map-columns" element={
-            <PrivilegedRoute>
+            <ProtectedRoute>
               <MapColumns />
-            </PrivilegedRoute>
+            </ProtectedRoute>
           } />
           <Route path="/manual-import" element={
-            <PrivilegedRoute>
+            <ProtectedRoute>
               <ManualImport />
-            </PrivilegedRoute>
+            </ProtectedRoute>
           } />
 
           {/* Manage Users - Admin only */}

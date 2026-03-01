@@ -19,7 +19,7 @@ export const ROLE_PERMISSIONS = {
     canCreateTestimonials: true,
     canEditOwnTestimonials: true,
     canDeleteOwnTestimonials: false,
-    canImportTestimonials: false,
+    canImportTestimonials: true,
     canManageUsers: false,
     canAccessDashboard: true,
     canAccessSettings: false,
