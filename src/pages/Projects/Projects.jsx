@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../constants/roles';
-import { getProjects, deleteProject } from '../../services/projectService';
+import { getProjects, deleteProject, createProject } from '../../services/projectService';
 import { FaFolderOpen, FaPlus, FaSpinner, FaTrash } from 'react-icons/fa';
 import CreateProjectModal from '../../components/CreateProjectModal/CreateProjectModal';
 
@@ -13,15 +13,19 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Check permissions (Admin or Privileged User can create/delete)
-  const canCreate = hasPermission(userRole, 'canImportTestimonials') || hasPermission(userRole, 'canManageUsers');
+  // Any authenticated user can create projects; only privileged/admin can delete
+  const canCreate = !!userRole;
+  const canDelete = hasPermission(userRole, 'canManageUsers') || userRole === 'privileged_user' || userRole === 'admin';
 
   useEffect(() => {
     fetchData();
   }, [userProfile]);
 
   const fetchData = async () => {
-    if (!userProfile?.company) return;
+    if (!userProfile?.company) {
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const data = await getProjects(userProfile.company);
@@ -112,7 +116,7 @@ const Projects = () => {
                   <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 shadow-inner group-hover:scale-110 transition-transform duration-300">
                     <FaFolderOpen className="text-xl" />
                   </div>
-                  {canCreate && (
+                  {canDelete && (
                     <button
                       onClick={(e) => handleDeleteProject(e, project.id)}
                       className="p-2 text-content-muted hover:text-red-500 transition-colors rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 focus:opacity-100"
@@ -143,14 +147,10 @@ const Projects = () => {
       <CreateProjectModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onCreate={(data) => {
-          // Pass company context down
-          import('../../services/projectService').then(({ createProject }) => {
-            createProject({ ...data, companyId: userProfile?.company }).then(() => {
-              fetchData();
-              setIsModalOpen(false);
-            });
-          });
+        onCreate={async (data) => {
+          await createProject({ ...data, companyId: userProfile?.company });
+          await fetchData();
+          setIsModalOpen(false);
         }}
       />
     </div>

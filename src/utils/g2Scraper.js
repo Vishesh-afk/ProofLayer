@@ -41,11 +41,11 @@ const fetchWithScrapeDo = async (targetUrl) => {
  */
 export const scrapeG2Reviews = async (baseUrl, onProgress) => {
     let allReviews = [];
-    
+
     // Ensure URL has query param key if needed, or handle pagination manually
     // The python script appended "?survey_responses_page={page}"
     // We need to support base URLs that might or might not have query params.
-    
+
     // Strictly follow Python script pagination: BASE_URL + page
     // The Python script used "?survey_responses_page=" 
     // 1. Determine paging parameter (Product pages use ?page, Sellers use ?survey_responses_page)
@@ -58,18 +58,18 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
 
     for (let page = 1; page <= MAX_PAGES; page++) {
         const pageUrl = `${pagingBase}${page}`;
-        
+
         if (onProgress) onProgress(`Scraping G2 page ${page} of ${MAX_PAGES}...`);
-        
+
         try {
             const html = await fetchWithScrapeDo(pageUrl);
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
-            
+
             // 2. Try multiple container selectors
             // Selector A: Seller pages (from your Python script)
             let reviewBlocks = Array.from(doc.querySelectorAll("#reviews-result .elv-border"));
-            
+
             // Selector B: Product pages (itemprop is the standard now)
             if (reviewBlocks.length === 0) {
                 reviewBlocks = Array.from(doc.querySelectorAll("div[itemprop='review']"));
@@ -79,10 +79,10 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
             if (reviewBlocks.length === 0) {
                 reviewBlocks = Array.from(doc.querySelectorAll(".paper.paper--white.paper--wheel"));
             }
-            
+
             if (reviewBlocks.length === 0) {
                 console.warn(`No G2 reviews found on page ${page}. URL: ${pageUrl}`);
-                break; 
+                break;
             }
 
             reviewBlocks.forEach(block => {
@@ -104,7 +104,7 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
                 const title = titleTag ? titleTag.textContent.trim() : "";
                 const description = descTag ? descTag.textContent.trim() : "";
                 let date = dateTag ? (dateTag.getAttribute('datetime') || dateTag.textContent.trim()) : new Date().toISOString();
-                
+
                 let rating = 0;
                 if (ratingTag) {
                     if (ratingTag.tagName === 'META') {
@@ -115,20 +115,20 @@ export const scrapeG2Reviews = async (baseUrl, onProgress) => {
                 }
 
                 // Avatar extraction (extra benefit for JS version)
-                const imgTag = block.querySelector("img"); 
+                const imgTag = block.querySelector("img");
                 let avatarUrl = "";
                 if (imgTag) {
-                     const possibleUrl = imgTag.getAttribute('data-src') || imgTag.getAttribute('src');
-                     if (possibleUrl && !possibleUrl.includes('spacer')) {
-                         avatarUrl = possibleUrl;
-                     }
+                    const possibleUrl = imgTag.getAttribute('data-src') || imgTag.getAttribute('src');
+                    if (possibleUrl && !possibleUrl.includes('spacer')) {
+                        avatarUrl = possibleUrl;
+                    }
                 }
 
                 if (name || title || description) {
                     allReviews.push({
-                        author: name,         
-                        role: title,          
-                        content: description, 
+                        author: name,
+                        role: title,
+                        content: description,
                         rating: rating,
                         source: 'G2',
                         date: date,

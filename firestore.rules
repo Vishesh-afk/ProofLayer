@@ -59,7 +59,8 @@ service cloud.firestore {
     // PROJECTS COLLECTION
     match /projects/{projectId} {
       allow read: if request.auth != null;
-      allow write: if isPrivilegedOrAdmin();
+      allow create: if request.auth != null;
+      allow update, delete: if isPrivilegedOrAdmin();
     }
 
     // ASSETS COLLECTION
